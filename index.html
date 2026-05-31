@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="./static/css/bulma.min.css">
   <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
   <link rel="stylesheet" href="./static/css/index.css">
-  <link rel="stylesheet" href="./static/css/vjam.css?v=39">
+  <link rel="stylesheet" href="./static/css/vjam.css?v=40">
 
 </head>
 <body>
@@ -790,7 +790,7 @@
     // URL split into fragments so a substring scan of the served file
     // finds 0 hits for the paper's domain or its ID — defense-in-depth
     // for the blind-review host on top of the CSS-based button hide.
-    if (pb) pb.href = ['https:', '//arx', 'iv.org/pdf/', '2605', '.27817'].join('');
+    /* __PAPER_URL_INJECTION_POINT__ — csail patch fills this in; anonymous deploy leaves empty */
   }
 
   // ── Core load/play primitives ───────────────────────────────────

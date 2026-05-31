@@ -1686,7 +1686,7 @@ html.vjam-lite .video-play-overlay { z-index: 7; }
 }
 .zoom-hint strong { color: var(--vjam-accent); }
 
-/* ── Real-author hero block (only present on csail.mit.edu via patch) ── */
+/* ── Real-author hero block (only present on the public deploy) ── */
 .author-list {
   display: flex;
   flex-wrap: wrap;
