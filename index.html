@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="./static/css/bulma.min.css">
   <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
   <link rel="stylesheet" href="./static/css/index.css">
-  <link rel="stylesheet" href="./static/css/vjam.css?v=40">
+  <link rel="stylesheet" href="./static/css/vjam.css?v=41">
 
 </head>
 <body>
@@ -394,15 +394,16 @@
     <div class="kicker">Results · Reasoning through occlusions</div>
     <h2 class="section-title">Press Hidden Button</h2>
     <p class="lede">
-      On basic &ldquo;push&nbsp;A&rdquo; / &ldquo;pick&nbsp;up&nbsp;B&rdquo; tasks, DreamZero
-      is competitive with VERA (paper reports DreamZero&nbsp;90% vs VERA&nbsp;60%). The picture
-      changes on <strong>reasoning-heavy prompts</strong>, where both DreamZero and &pi;<sub>0.5</sub>
-      tend to act on the wrong object or get stuck. The first such category we showcase is
-      <em>occlusion-based</em> reasoning &mdash; the &ldquo;find the button&rdquo; challenge below,
-      where a target hides behind a wall visible from only one of three cameras. VERA produces a
-      coherent plan that the Jacobian IDM executes; the asymmetry that follows reveals where the
-      baseline's failure originates. <span class="lede-aside"><em>Location-based and semantic-based
-      prompts will be added shortly.</em></span>
+      Recent video-based and VLA systems &mdash; including DreamZero and &pi;<sub>0.5</sub> &mdash;
+      handle basic &ldquo;push&nbsp;A&rdquo; / &ldquo;pick&nbsp;up&nbsp;B&rdquo; prompts well.
+      Reasoning-heavy prompts &mdash; those that require multi-view integration, location
+      grounding, or semantic understanding &mdash; remain a shared open challenge. We start with
+      <em>occlusion-based</em> reasoning: the &ldquo;find the button&rdquo; challenge below hides
+      a target behind a wall visible from only one of three cameras, with distractor props on the
+      table. VERA produces a coherent plan that the Jacobian IDM executes; placing it next to a
+      strong baseline gives a sense of where the gap currently lives.
+      <span class="lede-aside"><em>Location-based and semantic-based prompts will be added
+      shortly.</em></span>
     </p>
 
     <div class="compare-vs">
