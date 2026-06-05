@@ -218,6 +218,12 @@ h1, h2, h3, h4, h5 {
   padding-right: 1.15rem;
   transition: transform .12s ease, background-color .12s ease;
 }
+.button.is-pub .icon svg {
+  width: 1.05em;
+  height: 1.05em;
+  fill: currentColor;
+  vertical-align: middle;
+}
 .button.is-pub:hover {
   background: var(--vjam-accent);
   border-color: var(--vjam-accent);
