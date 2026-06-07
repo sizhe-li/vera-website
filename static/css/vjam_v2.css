@@ -368,6 +368,14 @@ img, video { max-width: 100%; display: block; }
 .v2-panel { display: none; }
 .v2-panel.is-active { display: block; }
 
+/* Narrow-80 modifier: centers panel/figure at 80% of container for breathable layout */
+.v2-figure.is-narrow,
+.v2-panel.is-narrow.is-active {
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* ── Comparison split (VERA vs DreamZero) ───────────────────── */
 .v2-compare {
   display: flex;

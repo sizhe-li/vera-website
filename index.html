@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Castoro:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./static/css/vjam_v2.css?v=8">
+  <link rel="stylesheet" href="./static/css/vjam_v2.css?v=9">
 </head>
 <body>
 
@@ -97,7 +97,7 @@
         real-world Panda arm to contact-rich re-orientation of a cube with a 16-DoF multi-fingered hand.
       </p>
     </header>
-    <figure class="v2-figure">
+    <figure class="v2-figure is-narrow">
       <img src="./static/figures/fig1_main_results-1.png" alt="Controlling robots across embodiments, skills, and environments">
     </figure>
   </div>
@@ -137,7 +137,7 @@
         the robot executes them, and observations return to the video model for the next round.
       </p>
     </header>
-    <figure class="v2-figure">
+    <figure class="v2-figure is-narrow">
       <img src="./static/figures/fig2_method_overview-1.png" alt="VERA method overview: video world model → Jacobian IDM → robot, in a closed loop">
       <figcaption class="v2-figure-caption is-block">
         <strong>Translating video to actions.</strong>
@@ -169,7 +169,7 @@
     </div>
 
     <!-- Panel 1: yellow-cube-on-lego (3 views + dream concat + jacobian) -->
-    <div class="v2-panel is-active" id="t-yellow-lego">
+    <div class="v2-panel is-narrow is-active" id="t-yellow-lego">
       <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;place the yellow cube on top of the lego block.&rdquo;</span></p>
       <div class="v2-grid cols-3">
         <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/hand_16779706_8s.jpg"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/hand_16779706_8s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">wrist</figcaption></figure>
@@ -185,7 +185,7 @@
     </div>
 
     <!-- Panel 2: blue button (3 views + panoramic Jacobian) -->
-    <div class="v2-panel" id="t-blue-button">
+    <div class="v2-panel is-narrow" id="t-blue-button">
       <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;approach and push the blue button.&rdquo;</span></p>
       <div class="v2-grid cols-2">
         <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-blue-button/hand_16779706.jpg"><source data-src="./static/videos/results_h264/ours-blue-button/hand_16779706.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">wrist</figcaption></figure>
@@ -197,7 +197,7 @@
     </div>
 
     <!-- Panel 3: orange button (3 views + panoramic Jacobian) -->
-    <div class="v2-panel" id="t-orange-button">
+    <div class="v2-panel is-narrow" id="t-orange-button">
       <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;approach and push the orange button.&rdquo;</span></p>
       <div class="v2-grid cols-2">
         <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-orange-button/hand_16779706.jpg"><source data-src="./static/videos/results_h264/ours-orange-button/hand_16779706.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">wrist</figcaption></figure>
@@ -209,7 +209,7 @@
     </div>
 
     <!-- Panel 4: tennis ball -->
-    <div class="v2-panel" id="t-tennis-ball">
+    <div class="v2-panel is-narrow" id="t-tennis-ball">
       <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;pick up the green tennis ball and place it inside the bowl.&rdquo;</span></p>
       <div class="v2-grid cols-2">
         <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-tennis-ball/fixed_hand_16779706.jpg"><source data-src="./static/videos/results_h264/ours-tennis-ball/fixed_hand_16779706.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">wrist</figcaption></figure>
@@ -221,7 +221,7 @@
     </div>
 
     <!-- Panel 5: yellow on plate -->
-    <div class="v2-panel" id="t-yellow-plate">
+    <div class="v2-panel is-narrow" id="t-yellow-plate">
       <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;place the yellow cube on top of the plate.&rdquo;</span></p>
       <div class="v2-grid cols-1">
         <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-place-yellow-cube-on-top-of-the-plate/policy_vis.jpg"><source data-src="./static/videos/results/ours-place-yellow-cube-on-top-of-the-plate/policy_vis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
@@ -229,7 +229,7 @@
     </div>
 
     <!-- Panel 6: purple cube -->
-    <div class="v2-panel" id="t-purple-cube">
+    <div class="v2-panel is-narrow" id="t-purple-cube">
       <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;take the purple cube out of the plate and place it on the side.&rdquo;</span></p>
       <div class="v2-grid cols-1">
         <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-take-purple-cube-out-of-plate-and-place-on-side/policy_vis_recovered.jpg"><source data-src="./static/videos/results_h264/ours-take-purple-cube-out-of-plate-and-place-on-side/policy_vis_recovered.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
