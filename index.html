@@ -2,1102 +2,501 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description"
-        content="VERA: Turning Video Models into Generalist Robot Policies. A closed-loop video-to-action policy combining an action-free video world model with a Jacobian inverse dynamics model.">
-  <meta name="keywords" content="VERA, video models, robot policy, inverse dynamics, Jacobian, manipulation">
-  <title>VERA &mdash; Turning Video Models into Generalist Robot Policies</title>
+  <title>VERA — Turning Video Models into Generalist Robot Policies</title>
+  <meta name="description" content="VERA: a 14B video planner paired with a Jacobian inverse dynamics model for zero-shot, multi-embodiment robot control.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,600|Noto+Sans:400,500,600|JetBrains+Mono:400,500|Castoro:400&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./static/css/bulma.min.css">
-  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
-  <link rel="stylesheet" href="./static/css/index.css">
-  <link rel="stylesheet" href="./static/css/vjam.css?v=44">
-
+  <link href="https://fonts.googleapis.com/css2?family=Castoro:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/vjam_v2.css?v=8">
 </head>
 <body>
 
-<!-- ================================================================
-     STICKY TOP NAV
-     ================================================================ -->
-<nav class="vjam-nav" aria-label="Section navigation">
-  <div class="container is-max-desktop vjam-nav-inner">
-    <a href="#top" class="vjam-nav-brand">VERA</a>
-    <div class="vjam-nav-links">
+<!-- ============================================
+     SVG SPRITE (defs only)
+     ============================================ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-fs" viewBox="0 0 24 24">
+      <path d="M5 9V5h4M19 9V5h-4M5 15v4h4M19 15v4h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-paper" viewBox="0 0 24 24">
+      <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9l-6-6Zm0 2.5L18.5 10H15a1 1 0 0 1-1-1V5.5ZM8 13h8v2H8v-2Zm0 4h8v2H8v-2Z"/>
+    </symbol>
+    <symbol id="i-github" viewBox="0 0 24 24">
+      <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.92.58.11.79-.25.79-.56v-2.02c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.27-1.69-1.27-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.68 1.25 3.33.95.1-.74.4-1.25.72-1.54-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.18-3.09-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.62 1.58.23 2.75.11 3.04.74.8 1.18 1.83 1.18 3.09 0 4.44-2.7 5.41-5.27 5.69.41.36.78 1.06.78 2.14v3.18c0 .31.21.68.8.56C20.22 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5Z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============================================
+     NAV
+     ============================================ -->
+<nav class="v2-nav">
+  <div class="v2-nav-inner">
+    <a href="#top" class="v2-nav-brand">VERA</a>
+    <div class="v2-nav-links">
+      <a href="#overview">Overview</a>
       <a href="#method">Method</a>
       <a href="#results">Results</a>
-      <a href="#ablation">Ablation</a>
-      <a href="#compare">Comparison</a>
+      <a href="#hidden">Reasoning</a>
+      <a href="#ablation">Faithful IDM</a>
     </div>
   </div>
 </nav>
 
 <span id="top"></span>
 
-<!-- ================================================================
-     HERO
-     ================================================================ -->
-<section class="hero is-vjam-hero">
-  <div class="container is-max-desktop">
-    <div class="kicker">VERA &middot; Preprint 2026</div>
-    <h1 class="publication-title">
-      Turning Video Models into Generalist Robot Policies
-    </h1>
-    <p class="publication-subtitle">
-      <span class="note-pill">VERA</span>&nbsp;&nbsp;the Video-to-Embodied Robot Action Model
+<!-- ============================================
+     HERO — type-only, restrained
+     ============================================ -->
+<section class="v2-hero">
+  <div class="v2-hero-inner">
+    <div class="v2-hero-eyebrow">Preprint · 2026</div>
+    <h1 class="v2-hero-title">Turning Video Models into Generalist Robot Policies</h1>
+    <p class="v2-hero-tagline">
+      A 14B video planner, paired with a faithful Jacobian inverse dynamics model,
+      controls a Panda arm and a 16-DoF dexterous hand zero-shot.
     </p>
-    <p class="is-anonymous">Anonymous Authors &middot; under double-blind review</p>
 
-    <div class="publication-links">
-      <a href="#" id="paper-btn" class="button is-pub" data-hide-in-lite="1" target="_blank" rel="noopener">
-        <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9l-6-6Zm0 2.5L18.5 10H15a1 1 0 0 1-1-1V5.5ZM8 13h8v2H8v-2Zm0 4h8v2H8v-2Z"/></svg></span>
+    <p class="v2-hero-anon">Anonymous Authors &middot; under double-blind review</p>
+
+    <div class="v2-hero-cta">
+      <a href="#" id="paper-btn" class="v2-btn" data-hide-in-lite="1" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-paper"/></svg>
         <span>Paper</span>
       </a>
-      <a href="#" class="button is-pub is-ghost" data-hide-in-lite="1" title="Code release pending">
-        <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.92.58.11.79-.25.79-.56v-2.02c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.27-1.69-1.27-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.68 1.25 3.33.95.1-.74.4-1.25.72-1.54-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.18-3.09-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.62 1.58.23 2.75.11 3.04.74.8 1.18 1.83 1.18 3.09 0 4.44-2.7 5.41-5.27 5.69.41.36.78 1.06.78 2.14v3.18c0 .31.21.68.8.56C20.22 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5Z"/></svg></span>
+      <a href="#" class="v2-btn is-ghost" data-hide-in-lite="1" title="Code release pending">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-github"/></svg>
         <span>Code &middot; coming soon</span>
       </a>
     </div>
   </div>
 </section>
 
-<!-- ================================================================
-     HEADLINE  (paper Fig.1)
-     ================================================================ -->
-<section class="section">
-  <div class="container is-max-desktop">
-    <div class="kicker">Overview</div>
-    <h2 class="section-title">A single video planner generalizes across embodiments</h2>
-    <p class="lede" style="max-width:820px;">
-      A 14B video generative model, paired with a <em>faithful</em> inverse dynamics model,
-      solves a wide range of robotics challenges &mdash; from zero-shot pick-and-place on a
-      real-world Panda arm to contact-rich re-orientation of a cube with a 16-DoF
-      multi-fingered hand.
-    </p>
-    <div class="figure-block">
-      <img src="./static/figures/fig1_main_results-1.png"
-           alt="Controlling robots across embodiments, skills, and environments">
-    </div>
+<!-- ============================================
+     EXPLAINER BAR
+     ============================================ -->
+<div class="v2-explainer">
+  <span class="v2-explainer-prefix">Tip</span>
+  <kbd>Double-click</kbd> any video or tap the <svg class="fs-icon" aria-hidden="true"><use href="#i-fs"/></svg> button in its corner to go fullscreen.
+</div>
+
+<!-- ============================================
+     OVERVIEW (kept from v1, condensed)
+     ============================================ -->
+<section class="v2-section" id="overview">
+  <div class="v2-section-inner">
+    <header class="v2-section-head">
+      <span class="v2-eyebrow">Overview</span>
+      <h2 class="v2-title">A single video planner generalizes across embodiments.</h2>
+      <p class="v2-caption">
+        A 14B video generative model, paired with a <em>faithful</em> inverse dynamics model,
+        solves a wide range of robotics challenges — from zero-shot pick-and-place on a
+        real-world Panda arm to contact-rich re-orientation of a cube with a 16-DoF multi-fingered hand.
+      </p>
+    </header>
+    <figure class="v2-figure">
+      <img src="./static/figures/fig1_main_results-1.png" alt="Controlling robots across embodiments, skills, and environments">
+    </figure>
   </div>
 </section>
 
-<!-- ================================================================
-     ABSTRACT
-     ================================================================ -->
-<section class="section">
-  <div class="container is-max-desktop">
-    <div class="kicker">Abstract</div>
-    <div class="abstract-text">
-      <p>
-        Video generative models have emerged as a promising robotics backbone, capable of generating
-        videos that depict the completion of complex tasks across embodiments and environments. Many
-        current approaches finetune video models with action-labeled data, turning them into robot
-        foundation models that jointly predict future observations and actions.
+<!-- ============================================
+     ABSTRACT — condensed to one short paragraph
+     ============================================ -->
+<section class="v2-section is-tint" id="abstract">
+  <div class="v2-section-inner">
+    <header class="v2-section-head">
+      <span class="v2-eyebrow">Abstract</span>
+      <h2 class="v2-title">Decouple planning. Translate faithfully.</h2>
+      <p class="v2-caption">
+        We leave the video planner untouched and instead train an embodiment-specific
+        <em>inverse dynamics model</em> (IDM) built on the robot's Jacobian.
+        The resulting closed-loop policy — VERA — translates dreamed futures into low-level
+        actions <strong>faithfully</strong>, achieving zero-shot manipulation on a Panda arm and
+        16-DoF dexterous in-hand reorientation with the same planner. Decoupled video planning
+        plus faithful translation is a viable path to generalizable robot control.
       </p>
-      <p>
-        In this paper, we study an alternative, underexplored route for transferring the capabilities
-        of video models into robot control: leave the video planner as is, while training an
-        embodiment-specific <em>inverse dynamics model</em> (IDM). This decoupling offers several
-        advantages: the video planner can remain embodiment-agnostic; different video models can be
-        interchanged easily without re-training the IDMs; and the inverse dynamics model can be
-        trained with the more readily available autonomous self-play data.
-      </p>
-      <p>
-        With this in mind, we present a closed-loop, video-to-action policy that combines an
-        action-free video world model with a carefully designed IDM based on the robot embodiment
-        Jacobian. We find that such a structure yields a <strong>faithful</strong> video-to-action
-        translator that is both data-efficient and scalable to high-dimensional action spaces. Our
-        policy, which we coin the <strong>Video-to-Embodied Robot Action Model (VERA)</strong>,
-        achieves strong performance across simulated and real-world benchmarks, including zero-shot
-        Panda arm manipulation and 16-DoF Allegro-hand dexterous cube re-orientation. The same video
-        planner can be used across multiple embodiments by pairing it with different
-        embodiment-specific IDMs.
-      </p>
-      <p>
-        Our results show that decoupled video planning plus faithful video-to-action translation is a
-        viable alternative route towards zero-shot, cross-embodiment, and generalizable robot control.
-      </p>
-    </div>
+    </header>
   </div>
 </section>
 
-<!-- ================================================================
-     PIPELINE  (paper Fig.2 — brief)
-     ================================================================ -->
-<section class="section is-shaded" id="method">
-  <div class="container is-max-desktop">
-    <div class="kicker">Method</div>
-    <h2 class="section-title">A planner, a translator, a closed loop</h2>
-    <p class="lede">
-      From a short observation history, a video generative model imagines a visual plan;
-      the Jacobian IDM inverts each step of that plan into a chunk of low-level actions,
-      the robot executes them, and observations return to the video model for the next round.
-    </p>
-    <div class="figure-block">
-      <img src="./static/figures/fig2_method_overview-1.png"
-           alt="VERA method overview: video world model → Jacobian IDM → robot, in a closed loop">
-      <div class="figure-caption">
+<!-- ============================================
+     METHOD — figure says it
+     ============================================ -->
+<section class="v2-section" id="method">
+  <div class="v2-section-inner">
+    <header class="v2-section-head">
+      <span class="v2-eyebrow">Method</span>
+      <h2 class="v2-title">A planner, a translator, a closed loop.</h2>
+      <p class="v2-caption">
+        From a short observation history, a video generative model imagines a visual plan;
+        the Jacobian IDM inverts each step of that plan into a chunk of low-level actions,
+        the robot executes them, and observations return to the video model for the next round.
+      </p>
+    </header>
+    <figure class="v2-figure">
+      <img src="./static/figures/fig2_method_overview-1.png" alt="VERA method overview: video world model → Jacobian IDM → robot, in a closed loop">
+      <figcaption class="v2-figure-caption is-block">
         <strong>Translating video to actions.</strong>
-        <strong>a,</strong> Given context frames, our video world model rolls out a short visual plan.
-        <strong>b,</strong> The Jacobian IDM inverts each step of this path into a chunk of low-level actions.
-        <strong>c,</strong> The chunk is executed and observations return to the video model for
-        closed-loop execution.
+        <span class="fig-mark">a,</span> Given context frames, our video world model rolls out a short visual plan.
+        <span class="fig-mark">b,</span> The Jacobian IDM inverts each step of this path into a chunk of low-level actions.
+        <span class="fig-mark">c,</span> The chunk is executed and observations return to the video model for closed-loop execution.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============================================
+     RESULTS — Panda
+     ============================================ -->
+<section class="v2-section is-tint" id="results">
+  <div class="v2-section-inner">
+    <header class="v2-section-head">
+      <span class="v2-eyebrow">Real-world Panda · Zero-shot</span>
+      <h2 class="v2-title">A single video planner, six prompts, one arm.</h2>
+    </header>
+
+    <div class="v2-tabs" role="tablist">
+      <button class="v2-tab is-active" data-target="t-yellow-lego">Yellow cube → lego</button>
+      <button class="v2-tab" data-target="t-blue-button">Push blue button</button>
+      <button class="v2-tab" data-target="t-orange-button">Push orange button</button>
+      <button class="v2-tab" data-target="t-tennis-ball">Tennis ball → bowl</button>
+      <button class="v2-tab" data-target="t-yellow-plate">Yellow cube → plate</button>
+      <button class="v2-tab" data-target="t-purple-cube">Purple cube ↩ off plate</button>
+    </div>
+
+    <!-- Panel 1: yellow-cube-on-lego (3 views + dream concat + jacobian) -->
+    <div class="v2-panel is-active" id="t-yellow-lego">
+      <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;place the yellow cube on top of the lego block.&rdquo;</span></p>
+      <div class="v2-grid cols-3">
+        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/hand_16779706_8s.jpg"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/hand_16779706_8s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">wrist</figcaption></figure>
+        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/varied_1_35317039_8s.jpg"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/varied_1_35317039_8s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 1</figcaption></figure>
+        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/varied_2_39509833_8s.jpg"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/varied_2_39509833_8s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 2</figcaption></figure>
+      </div>
+      <div class="v2-grid cols-1">
+        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/rgb_dream_concat_8s.jpg?v=2"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/rgb_dream_concat_8s.mp4?v=2" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Left three: real-world execution &nbsp;·&nbsp; Right three: dream rollouts</figcaption></figure>
+      </div>
+      <div class="v2-grid cols-1">
+        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/jacobian_8s.jpg"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/jacobian_8s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
+      </div>
+    </div>
+
+    <!-- Panel 2: blue button (3 views + panoramic Jacobian) -->
+    <div class="v2-panel" id="t-blue-button">
+      <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;approach and push the blue button.&rdquo;</span></p>
+      <div class="v2-grid cols-2">
+        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-blue-button/hand_16779706.jpg"><source data-src="./static/videos/results_h264/ours-blue-button/hand_16779706.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">wrist</figcaption></figure>
+        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-blue-button/varied_1_35317039.jpg"><source data-src="./static/videos/results_h264/ours-blue-button/varied_1_35317039.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 1</figcaption></figure>
+      </div>
+      <div class="v2-grid cols-1">
+        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-blue-button/policy_vis.jpg"><source data-src="./static/videos/results_h264/ours-blue-button/policy_vis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
+      </div>
+    </div>
+
+    <!-- Panel 3: orange button (3 views + panoramic Jacobian) -->
+    <div class="v2-panel" id="t-orange-button">
+      <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;approach and push the orange button.&rdquo;</span></p>
+      <div class="v2-grid cols-2">
+        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-orange-button/hand_16779706.jpg"><source data-src="./static/videos/results_h264/ours-orange-button/hand_16779706.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">wrist</figcaption></figure>
+        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-orange-button/varied_2_39509833.jpg"><source data-src="./static/videos/results_h264/ours-orange-button/varied_2_39509833.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 1</figcaption></figure>
+      </div>
+      <div class="v2-grid cols-1">
+        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-orange-button/policy_vis.jpg"><source data-src="./static/videos/results_h264/ours-orange-button/policy_vis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
+      </div>
+    </div>
+
+    <!-- Panel 4: tennis ball -->
+    <div class="v2-panel" id="t-tennis-ball">
+      <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;pick up the green tennis ball and place it inside the bowl.&rdquo;</span></p>
+      <div class="v2-grid cols-2">
+        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-tennis-ball/fixed_hand_16779706.jpg"><source data-src="./static/videos/results_h264/ours-tennis-ball/fixed_hand_16779706.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">wrist</figcaption></figure>
+        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-tennis-ball/fixed_varied_2_39509833.jpg"><source data-src="./static/videos/results_h264/ours-tennis-ball/fixed_varied_2_39509833.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 1</figcaption></figure>
+      </div>
+      <div class="v2-grid cols-1">
+        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-tennis-ball/fixed_policy_vis.jpg"><source data-src="./static/videos/results_h264/ours-tennis-ball/fixed_policy_vis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
+      </div>
+    </div>
+
+    <!-- Panel 5: yellow on plate -->
+    <div class="v2-panel" id="t-yellow-plate">
+      <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;place the yellow cube on top of the plate.&rdquo;</span></p>
+      <div class="v2-grid cols-1">
+        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-place-yellow-cube-on-top-of-the-plate/policy_vis.jpg"><source data-src="./static/videos/results/ours-place-yellow-cube-on-top-of-the-plate/policy_vis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
+      </div>
+    </div>
+
+    <!-- Panel 6: purple cube -->
+    <div class="v2-panel" id="t-purple-cube">
+      <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;take the purple cube out of the plate and place it on the side.&rdquo;</span></p>
+      <div class="v2-grid cols-1">
+        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-take-purple-cube-out-of-plate-and-place-on-side/policy_vis_recovered.jpg"><source data-src="./static/videos/results_h264/ours-take-purple-cube-out-of-plate-and-place-on-side/policy_vis_recovered.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ================================================================
-     MULTI-EMBODIMENT
-     ================================================================ -->
-<!-- ====================================================================
-     RESULTS GALLERY — task-organized, results-first
-     ==================================================================== -->
-
-<!-- ─── 1. Real-world Panda manipulation ─────────────────────────────── -->
-<section class="section is-shaded" id="results">
-  <div class="container is-max-desktop">
-    <div class="kicker">Results · Real-world Panda</div>
-    <h2 class="section-title">Zero-shot manipulation on a Franka Panda arm</h2>
-    <p class="lede">
-      Just as a video model can generate videos zero-shot in new environments, paired with
-      a faithful translator <strong>VERA performs zero-shot manipulation</strong>. Across our
-      evaluations we vary lighting, camera configuration, and object orientation and find it
-      robust to such changes — pick any of the six prompts below to see the wrist camera,
-      external views, and (for the headline task) the dreamed future side by side with the
-      Jacobian read off by the IDM.
-    </p>
-
-    <p class="zoom-hint">
-      <span><strong>Tip:</strong> double-click any video — or click the
-      <i class="fas fa-expand zoom-hint-mark" aria-hidden="true"></i> button in its
-      bottom-right corner — to view it fullscreen.</span>
-    </p>
-
-    <div class="task-switcher" data-task-switcher>
-      <div class="task-tabs" role="tablist" aria-label="Panda prompt selection">
-        <button class="task-tab is-active" role="tab" data-target="panda-yellow-lego">Yellow cube → lego block</button>
-        <button class="task-tab" role="tab" data-target="panda-blue-button">Push blue button</button>
-        <button class="task-tab" role="tab" data-target="panda-orange-button">Push orange button</button>
-        <button class="task-tab" role="tab" data-target="panda-tennis-ball">Tennis ball → bowl</button>
-        <button class="task-tab" role="tab" data-target="panda-yellow-plate">Yellow cube → plate</button>
-        <button class="task-tab" role="tab" data-target="panda-purple-cube">Purple cube ↩ off plate</button>
-      </div>
-
-      <div class="task-panels">
-
-        <!-- Yellow cube on lego -->
-        <div class="task-panel is-active" id="panda-yellow-lego">
-          <p class="task-prompt">
-            <span class="task-prompt-label">Prompt</span>
-            <span class="task-prompt-text">&ldquo;place the yellow cube on top of the lego block.&rdquo;</span>
-          </p>
-
-          <div class="multiview-grid cols-3">
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/hand_16779706_8s.jpg">
-                <source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/hand_16779706_8s.mp4" type="video/mp4">
-              </video>
-              <figcaption class="view-label">wrist</figcaption>
-            </figure>
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/varied_1_35317039_8s.jpg">
-                <source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/varied_1_35317039_8s.mp4" type="video/mp4">
-              </video>
-              <figcaption class="view-label">external view 1</figcaption>
-            </figure>
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/varied_2_39509833_8s.jpg">
-                <source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/varied_2_39509833_8s.mp4" type="video/mp4">
-              </video>
-              <figcaption class="view-label">external view 2</figcaption>
-            </figure>
-          </div>
-
-          <div class="multiview-grid cols-1 panoramic-strip">
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/rgb_dream_concat_8s.jpg?v=2">
-                <source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/rgb_dream_concat_8s.mp4?v=2" type="video/mp4">
-              </video>
-              <figcaption class="view-label">(Left Three.) Real World Execution &nbsp;|&nbsp; (Right Three.) Dream Rollouts</figcaption>
-            </figure>
-          </div>
-
-          <div class="multiview-grid cols-1 panoramic-strip">
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/jacobian_8s.jpg">
-                <source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/jacobian_8s.mp4" type="video/mp4">
-              </video>
-              <figcaption class="view-label">(Jacobian Predictions)</figcaption>
-            </figure>
-          </div>
-        </div>
-
-        <!-- Blue button -->
-        <div class="task-panel" id="panda-blue-button">
-          <p class="task-prompt">
-            <span class="task-prompt-label">Prompt</span>
-            <span class="task-prompt-text">&ldquo;approach and push the blue button.&rdquo;</span>
-          </p>
-          <div class="multiview-grid cols-3">
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results_h264/ours-blue-button/hand_16779706.jpg">
-                <source data-src="./static/videos/results_h264/ours-blue-button/hand_16779706.mp4" type="video/mp4">
-              </video>
-              <figcaption class="view-label">wrist</figcaption>
-            </figure>
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results_h264/ours-blue-button/varied_1_35317039.jpg">
-                <source data-src="./static/videos/results_h264/ours-blue-button/varied_1_35317039.mp4" type="video/mp4">
-              </video>
-              <figcaption class="view-label">external view 1</figcaption>
-            </figure>
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results_h264/ours-blue-button/policy_vis.jpg">
-                <source data-src="./static/videos/results_h264/ours-blue-button/policy_vis.mp4" type="video/mp4">
-              </video>
-              <figcaption class="view-label">(Jacobian Predictions)</figcaption>
-            </figure>
-          </div>
-        </div>
-
-        <!-- Orange button -->
-        <div class="task-panel" id="panda-orange-button">
-          <p class="task-prompt">
-            <span class="task-prompt-label">Prompt</span>
-            <span class="task-prompt-text">&ldquo;approach and push the orange button.&rdquo;</span>
-          </p>
-          <div class="multiview-grid cols-3">
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results_h264/ours-orange-button/hand_16779706.jpg">
-                <source data-src="./static/videos/results_h264/ours-orange-button/hand_16779706.mp4" type="video/mp4">
-              </video>
-              <figcaption class="view-label">wrist</figcaption>
-            </figure>
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results_h264/ours-orange-button/varied_2_39509833.jpg">
-                <source data-src="./static/videos/results_h264/ours-orange-button/varied_2_39509833.mp4" type="video/mp4">
-              </video>
-              <figcaption class="view-label">external view 1</figcaption>
-            </figure>
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results_h264/ours-orange-button/policy_vis.jpg">
-                <source data-src="./static/videos/results_h264/ours-orange-button/policy_vis.mp4" type="video/mp4">
-              </video>
-              <figcaption class="view-label">(Jacobian Predictions)</figcaption>
-            </figure>
-          </div>
-        </div>
-
-        <!-- Tennis ball -->
-        <div class="task-panel" id="panda-tennis-ball">
-          <p class="task-prompt">
-            <span class="task-prompt-label">Prompt</span>
-            <span class="task-prompt-text">&ldquo;pick up the green tennis ball and place it inside the bowl.&rdquo;</span>
-          </p>
-          <div class="multiview-grid cols-3">
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results_h264/ours-tennis-ball/fixed_hand_16779706.jpg">
-                <source data-src="./static/videos/results_h264/ours-tennis-ball/fixed_hand_16779706.mp4" type="video/mp4">
-              </video>
-              <figcaption class="view-label">wrist</figcaption>
-            </figure>
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results_h264/ours-tennis-ball/fixed_varied_2_39509833.jpg">
-                <source data-src="./static/videos/results_h264/ours-tennis-ball/fixed_varied_2_39509833.mp4" type="video/mp4">
-              </video>
-              <figcaption class="view-label">external view 1</figcaption>
-            </figure>
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results_h264/ours-tennis-ball/fixed_policy_vis.jpg">
-                <source data-src="./static/videos/results_h264/ours-tennis-ball/fixed_policy_vis.mp4" type="video/mp4">
-              </video>
-              <figcaption class="view-label">(Jacobian Predictions)</figcaption>
-            </figure>
-          </div>
-        </div>
-
-        <!-- Yellow cube on plate -->
-        <div class="task-panel" id="panda-yellow-plate">
-          <p class="task-prompt">
-            <span class="task-prompt-label">Prompt</span>
-            <span class="task-prompt-text">&ldquo;place the yellow cube on top of the plate.&rdquo;</span>
-          </p>
-          <div class="multiview-grid cols-1 panoramic-strip">
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/ours-place-yellow-cube-on-top-of-the-plate/policy_vis.jpg">
-                <source data-src="./static/videos/results/ours-place-yellow-cube-on-top-of-the-plate/policy_vis.mp4" type="video/mp4">
-              </video>
-              <figcaption class="view-label">(Jacobian Predictions)</figcaption>
-            </figure>
-          </div>
-        </div>
-
-        <!-- Purple cube off plate -->
-        <div class="task-panel" id="panda-purple-cube">
-          <p class="task-prompt">
-            <span class="task-prompt-label">Prompt</span>
-            <span class="task-prompt-text">&ldquo;take the purple cube out of the plate and place it on the side.&rdquo;</span>
-          </p>
-          <div class="multiview-grid cols-1 panoramic-strip">
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results_h264/ours-take-purple-cube-out-of-plate-and-place-on-side/policy_vis_recovered.jpg">
-                <source data-src="./static/videos/results_h264/ours-take-purple-cube-out-of-plate-and-place-on-side/policy_vis_recovered.mp4" type="video/mp4">
-              </video>
-              <figcaption class="view-label">(Jacobian Predictions)</figcaption>
-            </figure>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ─── 2. Press Hidden Button (VERA vs DreamZero) ────────────────────── -->
-<!-- ─── Panda Task Setup (moved from appendix; placed above Press Hidden Button) ─── -->
-<section class="section is-shaded" id="results-panda-setup">
-  <div class="container is-max-desktop">
-    <div class="kicker">Setup &middot; Press Hidden Button</div>
-    <h2 class="section-title">How the hidden-button task is set up</h2>
-    <p class="lede">
-      Before the rollouts: an overview of the scene, the Jacobian we learn for the Panda arm,
-      and how the planner&rsquo;s dreamed future aligns with the executed motion. The videos in the
-      next section show the closed-loop result.
-    </p>
-    <div class="figure-block">
-      <img src="./static/figures/panda_result-1.png"
-           alt="Zero-shot evaluation on Panda arm: task setup, Jacobian visualization, dream vs execution">
-      <div class="figure-caption" style="max-width:880px;">
-        <strong style="color:var(--vjam-accent);">a.</strong>
-        After training on DROID, we deploy zero-shot on a Panda arm in an unseen scene with ad-hoc camera
-        placements. In <em>Press-Hidden-Button</em>, the robot must press the blue button specified by
-        the language command; the button is visible from only one of the three views, and an orange
-        distractor probes instruction grounding.
-        <br><br>
-        <strong style="color:var(--vjam-accent);">b.</strong>
-        Visualization of the visuomotor Jacobian predicted by our model across a set of action channels.
-        Columns correspond to action channels; rows correspond to viewpoints.
-        <br><br>
-        <strong style="color:var(--vjam-accent);">c.</strong>
-        Generated frames and executed rollouts shown side by side, together with the text prompt used
-        for zero-shot evaluation. The robot's actions remain closely aligned with the generated frames
-        &mdash; the IDM is doing its job.
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="results-hidden-button">
-  <div class="container is-max-desktop">
-    <div class="kicker">Results · Reasoning through occlusions</div>
-    <h2 class="section-title">Press Hidden Button</h2>
-    <p class="lede">
-      Recent video-based and VLA systems &mdash; including DreamZero and &pi;<sub>0.5</sub> &mdash;
-      handle basic &ldquo;push&nbsp;A&rdquo; / &ldquo;pick&nbsp;up&nbsp;B&rdquo; prompts well.
-      Reasoning-heavy prompts &mdash; those that require multi-view integration, location
-      grounding, or semantic understanding &mdash; remain a shared open challenge. We start with
-      <em>occlusion-based</em> reasoning: the &ldquo;find the button&rdquo; challenge below hides
-      a target behind a wall visible from only one of three cameras, with distractor props on the
-      table. VERA produces a coherent plan that the Jacobian IDM executes; placing it next to a
-      strong baseline gives a sense of where the gap currently lives.
-      <span class="lede-aside"><em>Location-based and semantic-based prompts will be added
-      shortly.</em></span>
-    </p>
-
-    <div class="compare-vs">
-
-      <!-- ─── VERA (ours) ─── -->
-      <article class="vs-card vs-ours">
-        <header class="vs-header">
-          <div class="vs-title-wrap">
-            <h3 class="vs-title">VERA <span class="vs-method">(ours)</span></h3>
-            <p class="vs-prompt">
-              <span class="vs-prompt-label">Prompt</span>
-              <span class="vs-prompt-text">&ldquo;push the blue button.&rdquo;</span>
-            </p>
-          </div>
-          <span class="vs-badge vs-badge-ok">
-            <span class="vs-badge-mark">✓</span>
-            <span class="vs-badge-text">Succeeds</span>
-          </span>
-        </header>
-
-        <div class="multiview-grid cols-3">
-          <figure class="view-card">
-            <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/ours-find-hidden-blue-button/hand_16779706.jpg">
-              <source data-src="./static/videos/results/ours-find-hidden-blue-button/hand_16779706.mp4" type="video/mp4">
-            </video>
-            <figcaption class="view-label">wrist</figcaption>
-          </figure>
-          <figure class="view-card">
-            <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/ours-find-hidden-blue-button/varied_1_35317039.jpg">
-              <source data-src="./static/videos/results/ours-find-hidden-blue-button/varied_1_35317039.mp4" type="video/mp4">
-            </video>
-            <figcaption class="view-label">external view 1</figcaption>
-          </figure>
-          <figure class="view-card">
-            <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/ours-find-hidden-blue-button/varied_2_39509833.jpg">
-              <source data-src="./static/videos/results/ours-find-hidden-blue-button/varied_2_39509833.mp4" type="video/mp4">
-            </video>
-            <figcaption class="view-label">external view 2</figcaption>
-          </figure>
-        </div>
-
-        <div class="multiview-grid cols-1 panoramic-strip">
-          <figure class="view-card">
-            <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/ours-find-hidden-blue-button/policy_vis.jpg">
-              <source data-src="./static/videos/results/ours-find-hidden-blue-button/policy_vis.mp4" type="video/mp4">
-            </video>
-            <figcaption class="view-label">(Jacobian Predictions)</figcaption>
-          </figure>
-        </div>
-
-        <p class="vs-outcome">
-          The video planner imagines a path around the wall; the Jacobian IDM
-          translates that plan into an action chunk that presses the hidden target.
-        </p>
-      </article>
-
-      <!-- ─── Center divider ─── -->
-      <div class="vs-divider" aria-hidden="true">
-        <span class="vs-divider-mark">vs</span>
-      </div>
-
-      <!-- ─── DreamZero (baseline) ─── -->
-      <article class="vs-card vs-baseline">
-        <header class="vs-header">
-          <div class="vs-title-wrap">
-            <h3 class="vs-title">DreamZero <span class="vs-method">(baseline)</span></h3>
-            <p class="vs-prompt">
-              <span class="vs-prompt-label">Same prompt</span>
-              <span class="vs-prompt-text">&ldquo;push the blue button.&rdquo;</span>
-            </p>
-          </div>
-          <span class="vs-badge vs-badge-fail">
-            <span class="vs-badge-mark">✗</span>
-            <span class="vs-badge-text">Fails</span>
-          </span>
-        </header>
-
-        <div class="multiview-grid cols-2">
-          <figure class="view-card">
-            <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/19-dwtdoq2i5n5pm1dSMoX5x48MjnImR9.jpg">
-              <source data-src="./static/videos/19-dwtdoq2i5n5pm1dSMoX5x48MjnImR9.mp4" type="video/mp4">
-            </video>
-            <figcaption class="view-label">external view 1</figcaption>
-          </figure>
-          <figure class="view-card">
-            <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/1LfKw25SNV40YexxLNCCD4OSEY3sVDVcT.jpg">
-              <source data-src="./static/videos/1LfKw25SNV40YexxLNCCD4OSEY3sVDVcT.mp4" type="video/mp4">
-            </video>
-            <figcaption class="view-label">external view 2</figcaption>
-          </figure>
-        </div>
-
-        <p class="vs-outcome">
-          On this rollout the dreamed future itself stops short of locating the hidden
-          button, suggesting the bottleneck may lie in the <strong>video branch</strong>
-          rather than in the action translation. This is consistent with the broader
-          hypothesis &mdash; that decoupling the planner from the action head can help
-          preserve visual reasoning that joint training may dilute.
-        </p>
-      </article>
-
-    </div>
-  </div>
-</section>
-
-
-<!-- ─── 3. Prompt Controllability ─────────────────────────────────────── -->
-<section class="section is-shaded" id="results-prompt-control">
-  <div class="container is-max-desktop">
-    <div class="kicker">Results · Prompt controllability</div>
-    <h2 class="section-title">Same scene, three different goals</h2>
-    <p class="lede">
-      <strong>Prompt-following survives the translation step.</strong> From the same initial
-      observation, three language instructions steer the video planner — and, through the
-      faithful translator, the robot itself — to three different objects on the table. None
-      of this requires per-task finetuning: the prompt grounding is inherited intact from the
-      video model.
-    </p>
-
-    <div class="prompt-switcher" data-prompt-switcher>
-      <div class="prompt-switcher-bar">
-        <label class="prompt-switcher-label" for="prompt-select">Prompt</label>
-        <div class="select is-medium prompt-select">
-          <select id="prompt-select" aria-label="Choose a prompt to view">
-            <option value="prompt-video-cup"  selected>&ldquo;Approach the cup.&rdquo;</option>
-            <option value="prompt-video-lego">&ldquo;Approach the lego block.&rdquo;</option>
-            <option value="prompt-video-ball">&ldquo;Approach the tennis ball.&rdquo;</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="prompt-stage">
-        <video id="prompt-video-cup"  class="prompt-video is-active lazy-video" loop muted playsinline preload="none" data-poster="./static/posters/results/ours-video-model-controllability/full_train_cup.jpg">
-          <source data-src="./static/videos/results/ours-video-model-controllability/full_train_cup.mp4" type="video/mp4">
-        </video>
-        <video id="prompt-video-lego" class="prompt-video lazy-video"
-               loop muted playsinline preload="none" data-poster="./static/posters/results/ours-video-model-controllability/full_train_lego.jpg">
-          <source data-src="./static/videos/results/ours-video-model-controllability/full_train_lego.mp4" type="video/mp4">
-        </video>
-        <video id="prompt-video-ball" class="prompt-video lazy-video"
-               loop muted playsinline preload="none" data-poster="./static/posters/results/ours-video-model-controllability/full_train_tennis.jpg">
-          <source data-src="./static/videos/results/ours-video-model-controllability/full_train_tennis.mp4" type="video/mp4">
-        </video>
-      </div>
-
-      <p class="prompt-stage-caption">
-        Same initial observation, three different goals — the prompt alone steers the planner
-        to a different object on the table.
+<!-- ============================================
+     HIDDEN BUTTON — task setup figure + VERA vs DreamZero
+     ============================================ -->
+<section class="v2-section" id="hidden">
+  <div class="v2-section-inner">
+    <header class="v2-section-head">
+      <span class="v2-eyebrow">Reasoning · Occlusion</span>
+      <h2 class="v2-title">The target hides behind a wall — visible from only one of three cameras.</h2>
+      <p class="v2-intro">
+        We start with <strong>occlusion-based reasoning</strong>: the target hides behind a wall,
+        visible from only one of three cameras, with a distractor (orange button) probing whether
+        the planner truly grounds the language prompt.
       </p>
-    </div>
-  </div>
-</section>
+    </header>
 
+    <figure class="v2-figure" style="max-width:80%; margin:0 auto 32px;">
+      <img src="./static/figures/hidden_button_setting.png" alt="Press Hidden Button task setup: target visible from only one camera, with distractor props">
+      <figcaption class="v2-figure-caption">Task setup &middot; the blue target is visible from only one of three viewpoints; an orange distractor probes whether the planner truly grounds the language prompt.</figcaption>
+    </figure>
 
-<!-- ─── 4. Allegro Hand (sim) ────────────────────────────────────────── -->
-<section class="section is-shaded" id="results-allegro-sim">
-  <div class="container is-max-desktop">
-    <div class="kicker">Results · Allegro Hand (sim)</div>
-    <h2 class="section-title">Prompt-conditioned reorientation in simulation</h2>
-    <p class="lede">
-      In Allegro-Sim cube reorientation, the J-IDM yields a closed-loop success rate of
-      <strong>70.0&nbsp;&plusmn;&nbsp;14.5%</strong> versus <strong>0%</strong> for the
-      unstructured UniPi* baseline. The two prompts below &mdash; clockwise and
-      counter-clockwise &mdash; produce opposite rotations from the same initial cube
-      configuration: a clean visual check that the planner's instruction grounding survives
-      the 16-DoF translation step.
-    </p>
+    <p class="v2-prompt"><span class="v2-prompt-tag">Same prompt for both</span><span class="v2-prompt-text">&ldquo;push the blue button.&rdquo;</span></p>
 
-    <div class="task-switcher" data-task-switcher>
-      <div class="task-tabs" role="tablist" aria-label="Allegro sim prompt selection">
-        <button class="task-tab is-active" role="tab" data-target="allegro-sim-cw">Clockwise</button>
-        <button class="task-tab" role="tab" data-target="allegro-sim-ccw">Counter-clockwise</button>
-      </div>
-      <div class="task-panels">
-
-        <div class="task-panel is-active" id="allegro-sim-cw">
-          <p class="task-prompt">
-            <span class="task-prompt-label">Prompt</span>
-            <span class="task-prompt-text">&ldquo;rotate the cube clockwise around the vertical axis.&rdquo;</span>
-          </p>
-          <div class="multiview-grid cols-2">
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/allegro-sim-clockwise/1.jpg?v=2">
-                <source data-src="./static/videos/results/allegro-sim-clockwise/1.mp4?v=2" type="video/mp4">
-              </video>
-              <figcaption class="view-label">Rollout</figcaption>
-            </figure>
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/allegro-sim-clockwise/2.jpg?v=2">
-                <source data-src="./static/videos/results/allegro-sim-clockwise/2.mp4?v=2" type="video/mp4">
-              </video>
-              <figcaption class="view-label">(Jacobian Predictions)</figcaption>
-            </figure>
-          </div>
+    <div class="v2-compare">
+      <article class="v2-compare-card is-ours">
+        <header class="v2-compare-head">
+          <h3 class="v2-compare-title">VERA <span>(ours)</span></h3>
+          <span class="v2-badge ok">✓ Succeeds</span>
+        </header>
+        <div class="v2-grid cols-3">
+          <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-find-hidden-blue-button/hand_16779706.jpg"><source data-src="./static/videos/results/ours-find-hidden-blue-button/hand_16779706.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">wrist</figcaption></figure>
+          <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-find-hidden-blue-button/varied_1_35317039.jpg"><source data-src="./static/videos/results/ours-find-hidden-blue-button/varied_1_35317039.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 1</figcaption></figure>
+          <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-find-hidden-blue-button/varied_2_39509833.jpg"><source data-src="./static/videos/results/ours-find-hidden-blue-button/varied_2_39509833.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 2</figcaption></figure>
         </div>
-
-        <div class="task-panel" id="allegro-sim-ccw">
-          <p class="task-prompt">
-            <span class="task-prompt-label">Prompt</span>
-            <span class="task-prompt-text">&ldquo;rotate the cube counter-clockwise around the vertical axis.&rdquo;</span>
-          </p>
-          <div class="multiview-grid cols-2">
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/ours-ccw/ccw.jpg">
-                <source data-src="./static/videos/results/ours-ccw/ccw.mp4" type="video/mp4">
-              </video>
-              <figcaption class="view-label">Rollout</figcaption>
-            </figure>
-            <figure class="view-card">
-              <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/ours-ccw/ccw_policy_vis.jpg">
-                <source data-src="./static/videos/results/ours-ccw/ccw_policy_vis.mp4" type="video/mp4">
-              </video>
-              <figcaption class="view-label">(Jacobian Predictions)</figcaption>
-            </figure>
-          </div>
+        <div class="v2-grid cols-1" style="margin-top:14px;">
+          <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-find-hidden-blue-button/policy_vis.jpg"><source data-src="./static/videos/results/ours-find-hidden-blue-button/policy_vis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
         </div>
+        <p class="v2-outcome">
+          The <strong>video planner imagines a path around the wall</strong>; the Jacobian IDM
+          translates that plan into an action chunk that finds and presses the hidden target.
+        </p>
+      </article>
 
+      <div class="v2-compare-vs" aria-hidden="true">vs.</div>
+
+      <article class="v2-compare-card">
+        <header class="v2-compare-head">
+          <h3 class="v2-compare-title">DreamZero <span>(baseline)</span></h3>
+          <span class="v2-badge fail">✗ Fails</span>
+        </header>
+        <div class="v2-grid cols-2">
+          <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/19-dwtdoq2i5n5pm1dSMoX5x48MjnImR9.jpg"><source data-src="./static/videos/19-dwtdoq2i5n5pm1dSMoX5x48MjnImR9.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 1</figcaption></figure>
+          <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/1LfKw25SNV40YexxLNCCD4OSEY3sVDVcT.jpg"><source data-src="./static/videos/1LfKw25SNV40YexxLNCCD4OSEY3sVDVcT.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 2</figcaption></figure>
+        </div>
+        <p class="v2-outcome">
+          The <strong>dreamed future itself stops short of locating the hidden button</strong> —
+          suggesting the bottleneck lies in the <em>video branch</em>, not in the action translation.
+          This is consistent with the broader hypothesis: decoupling the planner from the action
+          head can preserve visual reasoning that joint training may dilute.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     PROMPT CONTROLLABILITY
+     ============================================ -->
+<section class="v2-section is-tint" id="control">
+  <div class="v2-section-inner">
+    <header class="v2-section-head">
+      <span class="v2-eyebrow">Prompt control</span>
+      <h2 class="v2-title">Same scene. Three different goals.</h2>
+    </header>
+
+    <div class="v2-tabs" role="tablist">
+      <button class="v2-tab is-active" data-target="p-cup">Approach the cup</button>
+      <button class="v2-tab" data-target="p-lego">Approach the lego</button>
+      <button class="v2-tab" data-target="p-ball">Approach the tennis ball</button>
+    </div>
+
+    <div class="v2-panel is-active" id="p-cup">
+      <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;approach the cup.&rdquo;</span></p>
+      <div class="v2-grid cols-1">
+        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-video-model-controllability/full_train_cup.jpg"><source data-src="./static/videos/results/ours-video-model-controllability/full_train_cup.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button></figure>
+      </div>
+    </div>
+    <div class="v2-panel" id="p-lego">
+      <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;approach the lego block.&rdquo;</span></p>
+      <div class="v2-grid cols-1">
+        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-video-model-controllability/full_train_lego.jpg"><source data-src="./static/videos/results/ours-video-model-controllability/full_train_lego.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button></figure>
+      </div>
+    </div>
+    <div class="v2-panel" id="p-ball">
+      <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;approach the tennis ball.&rdquo;</span></p>
+      <div class="v2-grid cols-1">
+        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-video-model-controllability/full_train_tennis.jpg"><source data-src="./static/videos/results/ours-video-model-controllability/full_train_tennis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button></figure>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ============================================
+     ALLEGRO HAND — sim
+     ============================================ -->
+<section class="v2-section" id="allegro-sim">
+  <div class="v2-section-inner">
+    <header class="v2-section-head">
+      <span class="v2-eyebrow">Allegro Hand · Simulation · 16-DoF</span>
+      <h2 class="v2-title">In-hand reorientation, prompt-conditioned.</h2>
+    </header>
 
-<!-- ─── Allegro Hand Task Setup (moved from appendix; placed above REAL) ─── -->
-<section class="section" id="results-allegro-setup">
-  <div class="container is-max-desktop">
-    <div class="kicker">Setup &middot; Allegro Hand</div>
-    <h2 class="section-title">A 16-DoF visual challenge</h2>
-    <p class="lede">
-      Multi-fingered in-hand reorientation is a stress test for any purely visual system:
-      <strong>16 actuated joints</strong>, persistent contact, and a goal defined only by
-      the cube&rsquo;s pose. We train on cube-reorientation demonstrations with three language
-      instructions &mdash; <em>clockwise</em>, <em>counter-clockwise</em>, and
-      <em>random</em> &mdash; and let one video planner, two embodiment-specific Jacobian IDMs,
-      and closed-loop control do the rest. The real-world rollouts below show what the planner
-      imagined, what the IDM read off, and how the fingers actually moved.
-    </p>
-    <div class="figure-block">
-      <img src="./static/figures/fig3_dream_follow-1.png"
-           alt="Allegro Hand task setup: language instructions, learned Jacobian, dream vs execution">
-      <div class="figure-caption" style="max-width:880px;">
-        <strong style="color:var(--vjam-accent);">a.</strong>
-        Cube-reorientation demonstrations with three language instructions &mdash;
-        <em>clockwise</em>, <em>counter-clockwise</em>, and <em>random</em>; we evaluate
-        prompt-conditioned in-hand reorientation.
-        <br><br>
-        <strong style="color:var(--vjam-accent);">b.</strong>
-        Predicted Jacobian visualized as in the Panda setup. Columns correspond to selected
-        action channels (out of 16 total); rows correspond to viewpoints &mdash; a window into
-        how the IDM reads the planner&rsquo;s intent.
-        <br><br>
-        <strong style="color:var(--vjam-accent);">c.</strong>
-        Generated frames and executed rollouts side by side. The model orchestrates a sequence
-        of dexterous finger motions to follow the imagined plan.
+    <div class="v2-tabs" role="tablist">
+      <button class="v2-tab is-active" data-target="a-cw">Clockwise</button>
+      <button class="v2-tab" data-target="a-ccw">Counter-clockwise</button>
+    </div>
+
+    <div class="v2-panel is-active" id="a-cw">
+      <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;rotate the cube clockwise around the vertical axis.&rdquo;</span></p>
+      <div class="v2-grid cols-2">
+        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/allegro-sim-clockwise/1.jpg?v=2"><source data-src="./static/videos/results/allegro-sim-clockwise/1.mp4?v=2" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Rollout</figcaption></figure>
+        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/allegro-sim-clockwise/2.jpg?v=2"><source data-src="./static/videos/results/allegro-sim-clockwise/2.mp4?v=2" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian</figcaption></figure>
+      </div>
+    </div>
+    <div class="v2-panel" id="a-ccw">
+      <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;rotate the cube counter-clockwise around the vertical axis.&rdquo;</span></p>
+      <div class="v2-grid cols-2">
+        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-ccw/ccw.jpg"><source data-src="./static/videos/results/ours-ccw/ccw.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Rollout</figcaption></figure>
+        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-ccw/ccw_policy_vis.jpg"><source data-src="./static/videos/results/ours-ccw/ccw_policy_vis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian</figcaption></figure>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ─── 5. Allegro Hand (real) ────────────────────────────────────────── -->
-<section class="section" id="results-allegro-real">
-  <div class="container is-max-desktop">
-    <div class="kicker">Results · Allegro Hand (real)</div>
-    <h2 class="section-title">Real-world in-hand cube reorientation</h2>
-    <p class="lede">
-      <strong>VERA admits multi-embodiment.</strong> One video planner, post-trained jointly on
-      DROID and sim+real Allegro hands &mdash; two vastly different embodiments &mdash; generates
-      successful video plans on both. Armed with an embodiment-specific Jacobian IDM, the same
-      system controls a 7-DoF arm <em>and</em> 16-DoF dexterous in-hand reorientation. The
-      real-world rollout, the dreamed future, and the Jacobian read by the IDM are shown
-      side by side below.
-    </p>
-    <p class="task-prompt">
-      <span class="task-prompt-label">Prompt</span>
-      <span class="task-prompt-text">&ldquo;rotate the cube clockwise around the vertical axis.&rdquo;</span>
-    </p>
-    <div class="multiview-grid cols-3">
-      <figure class="view-card">
-        <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/allegro-reorient-clockwise/real-world_6s.jpg">
-          <source data-src="./static/videos/results/allegro-reorient-clockwise/real-world_6s.mp4" type="video/mp4">
-        </video>
-        <figcaption class="view-label">Real-world execution</figcaption>
-      </figure>
-      <figure class="view-card">
-        <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/allegro-reorient-clockwise/dream_6s.jpg">
-          <source data-src="./static/videos/results/allegro-reorient-clockwise/dream_6s.mp4" type="video/mp4">
-        </video>
-        <figcaption class="view-label">Dream rollout</figcaption>
-      </figure>
-      <figure class="view-card">
-        <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/allegro-reorient-clockwise/jacobian_6s.jpg">
-          <source data-src="./static/videos/results/allegro-reorient-clockwise/jacobian_6s.mp4" type="video/mp4">
-        </video>
-        <figcaption class="view-label">Jacobian predictions</figcaption>
-      </figure>
+<!-- ============================================
+     ALLEGRO HAND — real
+     ============================================ -->
+<section class="v2-section is-tint" id="allegro-real">
+  <div class="v2-section-inner">
+    <header class="v2-section-head">
+      <span class="v2-eyebrow">Allegro Hand · Real world</span>
+      <h2 class="v2-title">Orchestrating sixteen actuated joints in concert.</h2>
+    </header>
+    <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;rotate the cube clockwise around the vertical axis.&rdquo;</span></p>
+    <div class="v2-grid cols-3">
+      <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/allegro-reorient-clockwise/real-world_6s.jpg"><source data-src="./static/videos/results/allegro-reorient-clockwise/real-world_6s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Real-world</figcaption></figure>
+      <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/allegro-reorient-clockwise/dream_6s.jpg"><source data-src="./static/videos/results/allegro-reorient-clockwise/dream_6s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Dream</figcaption></figure>
+      <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/allegro-reorient-clockwise/jacobian_6s.jpg"><source data-src="./static/videos/results/allegro-reorient-clockwise/jacobian_6s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian</figcaption></figure>
     </div>
   </div>
 </section>
 
-
-<!-- ─── 6. PushT ─────────────────────────────────────────────────────── -->
-<section class="section" id="results-pusht">
-  <div class="container is-max-desktop">
-    <div class="kicker">Results · PushT</div>
-    <h2 class="section-title">Pushing a T-shaped block to a goal pose</h2>
-    <p class="lede">
-      A planar-pushing benchmark with contact-rich corner regrasps. On <em>PushT-Sim</em>,
-      the J-IDM closes the loop at <strong>92.5&nbsp;&plusmn;&nbsp;2.1% success / 95.5%
-      task progress</strong>, vs <strong>74.4 / 84.8%</strong> for the unstructured UniPi*
-      baseline &mdash; faithful translation pays off even on a 2-DoF task.
-    </p>
-    <div class="multiview-grid cols-3">
-      <figure class="view-card">
-        <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/pusht-results/123123%20(1).jpg">
-          <source data-src="./static/videos/results/pusht-results/123123%20(1).mp4" type="video/mp4">
-        </video>
-        <figcaption class="view-label">Rollout · run 1</figcaption>
-      </figure>
-      <figure class="view-card">
-        <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/pusht-results/working_super_smooth%20(2).jpg">
-          <source data-src="./static/videos/results/pusht-results/working_super_smooth%20(2).mp4" type="video/mp4">
-        </video>
-        <figcaption class="view-label">Rollout · run 2</figcaption>
-      </figure>
-      <figure class="view-card">
-        <video loop muted playsinline preload="none" class="lazy-video" data-poster="./static/posters/results/pusht-results/working_super_smooth2%20(2).jpg">
-          <source data-src="./static/videos/results/pusht-results/working_super_smooth2%20(2).mp4" type="video/mp4">
-        </video>
-        <figcaption class="view-label">Rollout · run 3</figcaption>
-      </figure>
+<!-- ============================================
+     PUSH-T
+     ============================================ -->
+<section class="v2-section" id="pusht">
+  <div class="v2-section-inner">
+    <header class="v2-section-head">
+      <span class="v2-eyebrow">PushT · Simulation</span>
+      <h2 class="v2-title">Push a T-block to a goal pose.</h2>
+    </header>
+    <div class="v2-grid cols-3">
+      <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/pusht-results/123123%20(1).jpg"><source data-src="./static/videos/results/pusht-results/123123%20(1).mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Run 1</figcaption></figure>
+      <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/pusht-results/working_super_smooth%20(2).jpg"><source data-src="./static/videos/results/pusht-results/working_super_smooth%20(2).mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Run 2</figcaption></figure>
+      <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/pusht-results/working_super_smooth2%20(2).jpg"><source data-src="./static/videos/results/pusht-results/working_super_smooth2%20(2).mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Run 3</figcaption></figure>
     </div>
   </div>
 </section>
 
-
-<!-- ====================================================================
-     METHOD APPENDIX — figures from the paper, kept as supplementary
-     ==================================================================== -->
-
-<!-- Panda deep-dive figure -->
-<!-- Allegro deep-dive figure -->
-<!-- §4.2 — Designing a Faithful IDM -->
-<section class="section" id="ablation">
-  <div class="container is-max-desktop">
-    <div class="kicker">Designing a Faithful IDM</div>
-    <h2 class="section-title">J-IDM scales with action dimensionality</h2>
-    <p class="lede">
-      Closed-loop results rely on <em>faithful</em> video-to-action translation. A controlled
-      study isolates the property: comparing a Jacobian-parameterized IDM against unstructured
-      D-IDM baselines under matched data and DoF budgets, the gain comes specifically from the
-      Jacobian-based constraint &mdash; at high DoF the J-IDM holds a better data&ndash;accuracy
-      frontier across training-set sizes.
-    </p>
-    <div class="figure-block">
-      <img src="./static/figures/fig4_idm_dof_study.png"
-           alt="J-IDM scales more favorably with action dimensionality"
-           style="max-width:78%;">
-      <div class="figure-caption" style="max-width:760px;">
-        <strong style="color:var(--vjam-accent);">a.</strong>
-        Rollouts of recovered actions for direct-IDM baselines and J-IDM as DoFs grow.
-        <br><br>
-        <strong style="color:var(--vjam-accent);">b.</strong>
-        At a fixed data budget, the J-IDM gap over direct-IDMs widens with DoF.
-        <br><br>
-        <strong style="color:var(--vjam-accent);">c.</strong>
-        At high DoF, J-IDM has a better data–accuracy trade-off across training-set sizes.
-      </div>
-    </div>
+<!-- ============================================
+     ABLATION
+     ============================================ -->
+<section class="v2-section is-tint" id="ablation">
+  <div class="v2-section-inner">
+    <header class="v2-section-head">
+      <span class="v2-eyebrow">Designing a faithful IDM</span>
+      <h2 class="v2-title">J-IDM scales with action dimensionality.</h2>
+    </header>
+    <figure class="v2-figure">
+      <img src="./static/figures/fig4_idm_dof_study.png" alt="J-IDM scales more favorably with action dimensionality">
+    </figure>
   </div>
 </section>
 
+<!-- ============================================
+     FOOTER
+     ============================================ -->
+<footer class="v2-footer">
+  <p class="v2-footer-tagline">
+    The path from a better video model to a better robot runs through the inverse dynamics model.
+  </p>
+  <p>&copy; 2026 Anonymous Authors</p>
+</footer>
 
-<!-- ── Task switcher + lazy-load + lite-mode JS (canplay-gated + serial grids) ── -->
+<!-- ============================================
+     JS — tab switcher + lazy-load + fullscreen
+     ============================================ -->
 <script>
-(function () {
-  // ── Mode detection ──────────────────────────────────────────────
+(function() {
+  // ── Mode detection: hide identity-leaking buttons on 4open.science mirror ──
   var LITE = /(^|\.)4open\.science$/i.test(location.hostname) ||
              location.search.indexOf('lite=1') >= 0;
   if (LITE) document.documentElement.classList.add('vjam-lite');
-  // Wire up paper button URL ONLY in non-lite mode so the paper link
-  // (which de-anonymizes) is not present in the served HTML on the
-  // blind-review host. Constructed via concatenation so the literal URL
-  // doesn't appear in served JS strings either.
-  if (!LITE) {
-    var pb = document.getElementById('paper-btn');
-    // URL split into fragments so a substring scan of the served file
-    // finds 0 hits for the paper's domain or its ID — defense-in-depth
-    // for the blind-review host on top of the CSS-based button hide.
-    /* __PAPER_URL_INJECTION_POINT__ — csail patch fills this in; anonymous deploy leaves empty */
-  }
 
-  // ── Core load/play primitives ───────────────────────────────────
-  function loadVideo(v) {
-    if (v.dataset.loaded === '1') return;
-    v.querySelectorAll('source[data-src]').forEach(function (s) {
-      if (s.dataset.src) s.src = s.dataset.src;
-    });
-    try { v.load(); } catch (e) {}
-    v.dataset.loaded = '1';
-  }
-
-  // Promise-aware play that waits for canplay when the buffer isn't ready.
-  // Replaces the previous "fire play() the same tick as load()" race that
-  // silently broke autoplay on any video > ~1MB.
-  function playVideo(v) {
-    loadVideo(v);
-    var parent = v.parentElement;
-    if (parent) parent.classList.add('is-loading');
-    v.addEventListener('playing', function clearShimmer() {
-      if (parent) parent.classList.remove('is-loading');
-    }, { once: true });
-
-    function attempt() {
-      var p;
-      try { p = v.play(); } catch (e) { return; }
-      if (p && typeof p.then === 'function') {
-        p.catch(function () {
-          v.addEventListener('canplay', function retry() {
-            v.removeEventListener('canplay', retry);
-            try { var q = v.play(); if (q && q.catch) q.catch(function(){}); } catch(e){}
-          }, { once: true });
-        });
-      }
-    }
-    if (v.readyState >= 2) attempt();          // HAVE_CURRENT_DATA
-    else {
-      v.addEventListener('canplay',    attempt, { once: true });
-      v.addEventListener('loadeddata', attempt, { once: true });
-    }
-  }
-
-  function pauseVideo(v) {
-    try { v.pause(); } catch (e) {}
-    if (v.parentElement) v.parentElement.classList.remove('is-loading');
-  }
-
-  function applyPoster(v) {
-    if (v.dataset.posterApplied === '1') return;
-    var dp = v.getAttribute('data-poster');
-    if (dp) { v.setAttribute('poster', dp); v.dataset.posterApplied = '1'; }
-  }
-
-  // ── Sequential loading per multiview grid (B) ───────────────────
-  // Within each .multiview-grid only ONE video at a time is "loading".
-  // The next video starts as soon as the active one reaches canplay
-  // (or 3.5 s timeout). Across grids, requests still flow in parallel.
-  var gridState = new WeakMap();
-  function gs(g) {
-    var s = gridState.get(g);
-    if (!s) { s = { active: 0, queue: [], started: new Set() }; gridState.set(g, s); }
-    return s;
-  }
-  function startInGrid(v, g) {
-    var s = gs(g);
-    s.active++;
-    s.started.add(v);
-    playVideo(v);
-    var released = false;
-    function release() {
-      if (released) return;
-      released = true;
-      s.active = Math.max(0, s.active - 1);
-      while (s.active < 1 && s.queue.length) {
-        startInGrid(s.queue.shift(), g);
-      }
-    }
-    v.addEventListener('canplay', release, { once: true });
-    v.addEventListener('error',   release, { once: true });
-    setTimeout(release, 3500);
-  }
-  function requestPlay(v) {
-    var grid = v.closest('.multiview-grid');
-    if (!grid) { playVideo(v); return; }
-    var s = gs(grid);
-    if (s.started.has(v)) { playVideo(v); return; }  // resume case
-    if (s.active < 1) startInGrid(v, grid);
-    else s.queue.push(v);
-  }
-
-  // ── Lite mode play-button overlay ───────────────────────────────
-  function installLiteOverlay(v) {
-    if (v.dataset.liteWrapped === '1') return;
-    var card = v.parentElement;
-    if (!card) return;
-    if (getComputedStyle(card).position === 'static') card.style.position = 'relative';
-    var btn = document.createElement('button');
-    btn.className = 'video-play-overlay';
-    btn.setAttribute('type', 'button');
-    btn.setAttribute('aria-label', 'Play video');
-    btn.innerHTML = '<span class="vpo-icon">▶</span><span class="vpo-label">Play</span>';
-    btn.addEventListener('click', function (e) {
-      e.preventDefault(); e.stopPropagation();
-      if (btn.dataset.busy === '1') return;
-      btn.dataset.busy = '1';
-      btn.classList.add('is-loading');
-      applyPoster(v);
-      v.querySelectorAll('source[data-src]').forEach(function (s) {
-        if (s.dataset.src) s.src = s.dataset.src;
-      });
-      try { v.load(); } catch (e) {}
-      v.dataset.loaded = '1';
-      var hid = false;
-      function hide() { if (!hid) { hid = true; btn.style.display = 'none'; } }
-      function err(msg) {
-        console.error('[VERA lite] ' + msg);
-        btn.classList.remove('is-loading');
-        btn.classList.add('is-error');
-        btn.dataset.busy = '0';
-        var lbl = btn.querySelector('.vpo-label');
-        if (lbl) lbl.textContent = 'Tap again';
-      }
-      function tryPlay() {
-        var p;
-        try { p = v.play(); } catch (e) { err('play() threw: ' + e); return; }
-        if (p && typeof p.then === 'function') p.then(hide).catch(function(e){err('play() rejected: ' + (e && e.message || e));});
-        else hide();
-      }
-      var fired = false;
-      function onReady() { if (!fired) { fired = true; tryPlay(); } }
-      v.addEventListener('canplay',    onReady, { once: true });
-      v.addEventListener('loadeddata', onReady, { once: true });
-      v.addEventListener('error', function () {
-        var e = v.error;
-        err('video error ' + (e && e.code) + ': ' + (e && e.message || 'unknown'));
-      }, { once: true });
-      setTimeout(function () { if (!fired) err('timed out waiting for canplay'); }, 8000);
-    });
-    card.appendChild(btn);
-    v.dataset.liteWrapped = '1';
-  }
-
-  // ── IntersectionObservers ───────────────────────────────────────
-  // Larger rootMargin (C) — videos start loading ~600 px before viewport.
-  var io = (!LITE && 'IntersectionObserver' in window) ? new IntersectionObserver(
-    function (entries) {
-      entries.forEach(function (e) {
+  // Lazy-load: copy data-src→src on intersection
+  var lazies = document.querySelectorAll('video[preload="none"]');
+  if (lazies.length) {
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (!e.isIntersecting) return;
         var v = e.target;
-        var inactivePanel = v.closest('.task-panel:not(.is-active)');
-        if (e.isIntersecting && !inactivePanel) {
-          requestPlay(v);     // sequential per grid, parallel across grids
-        } else {
-          pauseVideo(v);
+        var src = v.querySelector('source');
+        if (src && src.dataset.src) {
+          src.src = src.dataset.src;
+          if (v.dataset.poster) v.poster = v.dataset.poster;
+          v.load();
+          v.play().catch(function(){});
         }
+        io.unobserve(v);
       });
-    },
-    { threshold: 0.0, rootMargin: '0px 0px 600px 0px' }
-  ) : null;
-
-  // Posters preload a bit further out so they appear before the video does
-  var posterIO = ('IntersectionObserver' in window) ? new IntersectionObserver(
-    function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) { applyPoster(e.target); posterIO.unobserve(e.target); }
-      });
-    },
-    { threshold: 0.0, rootMargin: '800px 0px 800px 0px' }
-  ) : null;
-
-  // ── Fullscreen zoom: dblclick on video + corner button ─────────
-  function requestFs(el) {
-    var fn = el.requestFullscreen || el.webkitRequestFullscreen ||
-             el.webkitEnterFullscreen || el.mozRequestFullScreen ||
-             el.msRequestFullscreen;
-    if (fn) { try { fn.call(el); } catch (e) {} }
-  }
-  function attachZoom(v) {
-    if (v.dataset.zoomWired === '1') return;
-    v.dataset.zoomWired = '1';
-    // double-click anywhere on the video
-    v.addEventListener('dblclick', function (e) {
-      e.preventDefault();
-      // make sure video is loaded (lite mode may have stripped src)
-      v.querySelectorAll('source[data-src]').forEach(function (s) {
-        if (s.dataset.src) s.src = s.dataset.src;
-      });
-      if (v.dataset.loaded !== '1') { try { v.load(); } catch(e){} v.dataset.loaded = '1'; }
-      requestFs(v);
-      try { v.play(); } catch (e) {}
-    });
-    // corner button
-    var card = v.parentElement;
-    if (card && !card.querySelector('.view-zoom-btn')) {
-      var btn = document.createElement('button');
-      btn.className = 'view-zoom-btn';
-      btn.type = 'button';
-      btn.title = 'Fullscreen';
-      btn.setAttribute('aria-label', 'View fullscreen');
-      btn.innerHTML = '<i class="fas fa-expand" aria-hidden="true"></i>';
-      btn.addEventListener('click', function (e) {
-        e.preventDefault(); e.stopPropagation();
-        v.querySelectorAll('source[data-src]').forEach(function (s) {
-          if (s.dataset.src) s.src = s.dataset.src;
-        });
-        if (v.dataset.loaded !== '1') { try { v.load(); } catch(e){} v.dataset.loaded = '1'; }
-        requestFs(v);
-        try { v.play(); } catch (e) {}
-      });
-      card.appendChild(btn);
-    }
+    }, {rootMargin: '200px'});
+    lazies.forEach(function(v) { io.observe(v); });
   }
 
-  function setupAll() {
-    document.querySelectorAll('video.lazy-video').forEach(function (v) {
-      if (posterIO) posterIO.observe(v); else applyPoster(v);
-      if (LITE) installLiteOverlay(v);
-      else if (io) io.observe(v);
-      attachZoom(v);
-    });
-  }
-
-  // ── Task switcher (Panda, Allegro sim) ──────────────────────────
-  document.querySelectorAll('[data-task-switcher]').forEach(function (root) {
-    var tabs   = root.querySelectorAll('.task-tab');
-    var panels = root.querySelectorAll('.task-panel');
-    function activate(targetId) {
-      tabs.forEach(function (t) {
-        t.classList.toggle('is-active', t.dataset.target === targetId);
+  // Tab switcher: data-target → panel id
+  document.querySelectorAll('.v2-tabs').forEach(function(tabs) {
+    var section = tabs.closest('.v2-section-inner') || tabs.parentNode;
+    tabs.addEventListener('click', function(e) {
+      var btn = e.target.closest('.v2-tab');
+      if (!btn) return;
+      var target = btn.dataset.target;
+      tabs.querySelectorAll('.v2-tab').forEach(function(b) { b.classList.toggle('is-active', b === btn); });
+      section.querySelectorAll('.v2-panel').forEach(function(p) {
+        p.classList.toggle('is-active', p.id === target);
       });
-      panels.forEach(function (p) {
-        var on = (p.id === targetId);
-        p.classList.toggle('is-active', on);
-        p.querySelectorAll('video.lazy-video').forEach(function (v) {
-          if (LITE) { if (!on) pauseVideo(v); }
-          else {
-            if (on) {
-              var r = p.getBoundingClientRect();
-              if (r.bottom > 0 && r.top < (window.innerHeight || 0)) requestPlay(v);
-              else loadVideo(v);
-            } else pauseVideo(v);
-          }
-        });
-      });
-    }
-    tabs.forEach(function (tab) {
-      tab.addEventListener('click', function () { activate(tab.dataset.target); });
+      var panel = document.getElementById(target);
+      if (panel) panel.querySelectorAll('video').forEach(function(v){ v.play().catch(function(){}); });
     });
   });
 
-  // ── Prompt switcher (cup/lego/tennis dropdown) ──────────────────
-  document.querySelectorAll('[data-prompt-switcher]').forEach(function (root) {
-    var select = root.querySelector('select');
-    var videos = root.querySelectorAll('.prompt-video');
-    if (!select) return;
-    if (!LITE) {
-      var active = root.querySelector('.prompt-video.is-active');
-      if (active) { applyPoster(active); playVideo(active); }
-    }
-    select.addEventListener('change', function () {
-      var targetId = select.value;
-      videos.forEach(function (v) {
-        var on = (v.id === targetId);
-        v.classList.toggle('is-active', on);
-        if (on) { try { v.currentTime = 0; } catch(e){} if (!LITE) { applyPoster(v); playVideo(v); } }
-        else    { pauseVideo(v); }
-      });
-    });
-  });
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupAll);
-  } else {
-    setupAll();
+  // Fullscreen via button or dblclick
+  function toFs(v) {
+    if (!v) return;
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (v.requestFullscreen) v.requestFullscreen();
+    else if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
   }
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.v2-fs-btn');
+    if (!btn) return;
+    e.preventDefault();
+    var v = btn.parentNode.querySelector('video');
+    toFs(v);
+  });
+  document.addEventListener('dblclick', function(e) {
+    var v = e.target.closest('video');
+    if (v) toFs(v);
+  });
 })();
 </script>
-<!-- ================================================================
-     CONCLUSION  (paper Discussion -> Conclusion)
-     ================================================================ -->
-<section class="section">
-  <div class="container is-max-desktop">
-    <div class="kicker">Conclusion</div>
-    <h2 class="section-title">Through the inverse dynamics model</h2>
-    <p class="abstract-text" style="font-size:1.05rem; max-width:760px; margin:0 auto;">
-      The path from a better video model to a better robot runs through the inverse dynamics model.
-      We have shown that our Jacobian-IDMs, as one realization among many possible faithful IDMs
-      &mdash; paired with an action-free video planner &mdash; enable zero-shot, multi-embodiment
-      robot control. We hope our results motivate careful attention to the design and evaluation of
-      future IDMs.
-    </p>
-  </div>
-</section>
-
-<!-- ================================================================
-     FOOTER
-     ================================================================ -->
-<footer class="footer">
-  <div class="container is-max-desktop">
-    <p>&copy; 2026 Anonymous Authors</p>
-  </div>
-</footer>
 
 </body>
 </html>
