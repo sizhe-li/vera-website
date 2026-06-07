@@ -306,6 +306,11 @@
     <header class="v2-section-head">
       <span class="v2-eyebrow">Prompt control</span>
       <h2 class="v2-title">Same scene. Three different goals.</h2>
+      <p class="v2-caption">
+        From the same initial observation, three language prompts steer the video planner — and,
+        through the faithful translator, the robot itself — to three different objects on the table.
+        Prompt grounding is inherited intact from the video model; no per-task finetuning required.
+      </p>
     </header>
 
     <div class="v2-tabs" role="tablist">
@@ -342,7 +347,12 @@
   <div class="v2-section-inner">
     <header class="v2-section-head">
       <span class="v2-eyebrow">Allegro Hand · Simulation · 16-DoF</span>
-      <h2 class="v2-title">In-hand reorientation, prompt-conditioned.</h2>
+      <h2 class="v2-title">Dexterous in-hand cube reorientation.</h2>
+      <p class="v2-caption">
+        Sixteen actuated joints, persistent finger–cube contact, and a goal defined only by the
+        cube's pose. Language prompts produce opposite rotations from the same initial state —
+        a clean check that prompt grounding survives the 16-DoF action-translation step.
+      </p>
     </header>
 
     <div class="v2-tabs" role="tablist">
@@ -374,7 +384,12 @@
   <div class="v2-section-inner">
     <header class="v2-section-head">
       <span class="v2-eyebrow">Allegro Hand · Real world</span>
-      <h2 class="v2-title">Orchestrating sixteen actuated joints in concert.</h2>
+      <h2 class="v2-title">Real-world dexterous reorientation.</h2>
+      <p class="v2-caption">
+        The same video planner that drives a 7-DoF arm also commands a real 16-DoF Allegro hand.
+        Pairing one planner with an embodiment-specific Jacobian IDM is enough to translate the
+        dreamed future into coordinated finger motion on hardware.
+      </p>
     </header>
     <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;rotate the cube clockwise around the vertical axis.&rdquo;</span></p>
     <div class="v2-grid cols-3">
@@ -393,6 +408,11 @@
     <header class="v2-section-head">
       <span class="v2-eyebrow">PushT · Simulation</span>
       <h2 class="v2-title">Push a T-block to a goal pose.</h2>
+      <p class="v2-caption">
+        A 2-DoF planar-pushing benchmark with contact-rich corner regrasps — a controlled setting
+        where the gap between a faithful Jacobian translator and an unstructured baseline becomes
+        directly measurable in closed-loop success.
+      </p>
     </header>
     <div class="v2-grid cols-3">
       <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/pusht-results/pusht_run_1.jpg"><source data-src="./static/videos/results/pusht-results/pusht_run_1.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Run 1</figcaption></figure>
@@ -410,6 +430,11 @@
     <header class="v2-section-head">
       <span class="v2-eyebrow">Designing a faithful IDM</span>
       <h2 class="v2-title">J-IDM scales with action dimensionality.</h2>
+      <p class="v2-caption">
+        A controlled study isolating the design choice. Under matched data and DoF budgets, the
+        Jacobian-parameterized IDM holds a better data–accuracy frontier than unstructured
+        baselines — and the gap widens as embodiment dimensionality grows.
+      </p>
     </header>
     <figure class="v2-figure">
       <img src="./static/figures/fig4_idm_dof_study.png" alt="J-IDM scales more favorably with action dimensionality">
