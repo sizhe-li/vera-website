@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Castoro:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./static/css/vjam_v2.css?v=10">
+  <link rel="stylesheet" href="./static/css/vjam_v2.css?v=11">
 </head>
 <body>
 
@@ -173,7 +173,7 @@
         <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/varied_2_39509833_8s.jpg"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/varied_2_39509833_8s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 2</figcaption></figure>
       </div>
       <div class="v2-grid cols-1">
-        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/rgb_dream_concat_8s.jpg?v=2"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/rgb_dream_concat_8s.mp4?v=2" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Left three: real-world execution &nbsp;·&nbsp; Right three: dream rollouts</figcaption></figure>
+        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/rgb_dream_concat_8s.jpg?v=2"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/rgb_dream_concat_8s.mp4?v=3" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Left three: real-world execution &nbsp;·&nbsp; Right three: dream rollouts</figcaption></figure>
       </div>
       <div class="v2-grid cols-1">
         <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/jacobian_8s.jpg"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/jacobian_8s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
@@ -254,13 +254,16 @@
       <figcaption class="v2-figure-caption">Task setup &middot; the blue target is visible from only one of three viewpoints; an orange distractor probes whether the planner truly grounds the language prompt.</figcaption>
     </figure>
 
+    <div class="v2-compare-prompt">
+      <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;push the blue button.&rdquo;</span></p>
+    </div>
+
     <div class="v2-compare">
       <article class="v2-compare-card is-ours">
         <header class="v2-compare-head">
           <h3 class="v2-compare-title">VERA <span>(ours)</span></h3>
           <span class="v2-badge ok">✓ Succeeds</span>
         </header>
-        <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;push the blue button.&rdquo;</span></p>
         <div class="v2-grid cols-3">
           <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-find-hidden-blue-button/hand_16779706.jpg"><source data-src="./static/videos/results/ours-find-hidden-blue-button/hand_16779706.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">wrist</figcaption></figure>
           <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-find-hidden-blue-button/varied_1_35317039.jpg"><source data-src="./static/videos/results/ours-find-hidden-blue-button/varied_1_35317039.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 1</figcaption></figure>
@@ -280,7 +283,6 @@
           <h3 class="v2-compare-title">DreamZero <span>(baseline)</span></h3>
           <span class="v2-badge fail">✗ Fails</span>
         </header>
-        <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;push the blue button.&rdquo;</span></p>
         <div class="v2-grid cols-2">
           <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/19-dwtdoq2i5n5pm1dSMoX5x48MjnImR9.jpg"><source data-src="./static/videos/19-dwtdoq2i5n5pm1dSMoX5x48MjnImR9.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 1</figcaption></figure>
           <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/1LfKw25SNV40YexxLNCCD4OSEY3sVDVcT.jpg"><source data-src="./static/videos/1LfKw25SNV40YexxLNCCD4OSEY3sVDVcT.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 2</figcaption></figure>

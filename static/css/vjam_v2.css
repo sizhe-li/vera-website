@@ -376,14 +376,18 @@ img, video { max-width: 100%; display: block; }
   margin-right: auto;
 }
 
-/* ── Comparison split (VERA vs DreamZero) — side-by-side ─────── */
+/* ── Comparison split (VERA vs DreamZero) — asymmetric 65/35 ─── */
 .v2-compare {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.85fr 1fr;
   gap: 24px;
   align-items: start;
 }
 .v2-compare-vs { display: none; }  /* legacy stacked-mode divider; hidden in side-by-side */
+.v2-compare-prompt {
+  margin: 0 auto 22px;
+  text-align: center;
+}
 .v2-compare-card {
   background: var(--bg-card);
   border-radius: var(--r-lg);
