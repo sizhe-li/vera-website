@@ -8,8 +8,9 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Castoro:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./static/css/vjam_v2.css?v=12">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,340..640;1,9..144,340..640&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/vjam_v3.css?v=1">
+  <noscript><style>video { opacity: 1 !important; }</style></noscript>
 </head>
 <body>
 
@@ -44,12 +45,13 @@
       <a href="#ablation">Faithful IDM</a>
     </div>
   </div>
+  <div class="v2-nav-progress"></div>
 </nav>
 
 <span id="top"></span>
 
 <!-- ============================================
-     HERO — type-only, restrained
+     HERO — masthead
      ============================================ -->
 <section class="v2-hero">
   <div class="v2-hero-inner">
@@ -72,71 +74,84 @@
 </section>
 
 <!-- ============================================
-     EXPLAINER BAR
+     HERO REEL — overview video from the code release
      ============================================ -->
-<div class="v2-explainer">
-  <span class="v2-explainer-prefix">Tip</span>
-  <kbd>Double-click</kbd> any video or tap the <svg class="fs-icon" aria-hidden="true"><use href="#i-fs"/></svg> button in its corner to go fullscreen.
+<div class="v2-strip">
+  <div class="v2-reel">
+    <video style="aspect-ratio: 1280/720" autoplay loop muted playsinline preload="metadata" poster="./static/posters/vera_teaser.jpg">
+      <source src="./static/videos/vera_teaser.mp4?v=2" type="video/mp4">
+    </video>
+    <button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button>
+  </div>
 </div>
 
+<p class="v2-footnote"><span class="dagger">&dagger;</span><kbd>Double-click</kbd> any video, or tap the <svg class="fs-icon" aria-hidden="true"><use href="#i-fs"/></svg> button in its corner, to view fullscreen.</p>
+
 <!-- ============================================
-     OVERVIEW (kept from v1, condensed)
+     OVERVIEW
      ============================================ -->
 <section class="v2-section" id="overview">
   <div class="v2-section-inner">
     <header class="v2-section-head">
-      <span class="v2-eyebrow">Overview</span>
-      <h2 class="v2-title">A single video planner generalizes across embodiments.</h2>
-      <p class="v2-caption">
-        A 14B video generative model, paired with a <em>faithful</em> inverse dynamics model,
-        solves a wide range of robotics challenges — from zero-shot pick-and-place on a
-        real-world Panda arm to contact-rich re-orientation of a cube with a 16-DoF multi-fingered hand.
-      </p>
+      <div class="v2-eyebrow"><b>01</b>Overview</div>
+      <div class="v2-head-main">
+        <h2 class="v2-title">A single video planner generalizes across embodiments.</h2>
+        <p class="v2-caption">
+          A 14B video generative model, paired with a <em>faithful</em> inverse dynamics model,
+          solves a wide range of robotics challenges — from zero-shot pick-and-place on a
+          real-world Panda arm to contact-rich re-orientation of a cube with a 16-DoF multi-fingered hand.
+        </p>
+      </div>
     </header>
     <figure class="v2-figure is-narrow">
       <img src="./static/figures/fig1_main_results-1.png" alt="Controlling robots across embodiments, skills, and environments">
+      <figcaption class="v2-figure-caption"><span class="fig-no">Fig. 1</span>Controlling robots across embodiments, skills, and environments with a single video planner.</figcaption>
     </figure>
   </div>
 </section>
 
 <!-- ============================================
-     ABSTRACT — condensed to one short paragraph
+     ABSTRACT
      ============================================ -->
 <section class="v2-section is-tint" id="abstract">
   <div class="v2-section-inner">
     <header class="v2-section-head">
-      <span class="v2-eyebrow">Abstract</span>
-      <h2 class="v2-title">Decouple planning. Translate faithfully.</h2>
-      <p class="v2-caption">
-        We leave the video planner untouched and instead train an embodiment-specific
-        <em>inverse dynamics model</em> (IDM) built on the robot's Jacobian.
-        The resulting closed-loop policy — VERA — translates dreamed futures into low-level
-        actions <strong>faithfully</strong>, achieving zero-shot manipulation on a Panda arm and
-        16-DoF dexterous in-hand reorientation with the same planner. Decoupled video planning
-        plus faithful translation is a viable path to generalizable robot control.
-      </p>
+      <div class="v2-eyebrow"><b>02</b>Abstract</div>
+      <div class="v2-head-main">
+        <h2 class="v2-title">Decouple planning. Translate faithfully.</h2>
+        <p class="v2-caption">
+          We leave the video planner untouched and instead train an embodiment-specific
+          <em>inverse dynamics model</em> (IDM) built on the robot's Jacobian.
+          The resulting closed-loop policy — VERA — translates dreamed futures into low-level
+          actions <strong>faithfully</strong>, achieving zero-shot manipulation on a Panda arm and
+          16-DoF dexterous in-hand reorientation with the same planner. Decoupled video planning
+          plus faithful translation is a viable path to generalizable robot control.
+        </p>
+      </div>
     </header>
   </div>
 </section>
 
 <!-- ============================================
-     METHOD — figure says it
+     METHOD
      ============================================ -->
 <section class="v2-section" id="method">
   <div class="v2-section-inner">
     <header class="v2-section-head">
-      <span class="v2-eyebrow">Method</span>
-      <h2 class="v2-title">A planner, a translator, a closed loop.</h2>
-      <p class="v2-caption">
-        From a short observation history, a video generative model imagines a visual plan;
-        the Jacobian IDM inverts each step of that plan into a chunk of low-level actions,
-        the robot executes them, and observations return to the video model for the next round.
-      </p>
+      <div class="v2-eyebrow"><b>03</b>Method</div>
+      <div class="v2-head-main">
+        <h2 class="v2-title">A planner, a translator, a closed loop.</h2>
+        <p class="v2-caption">
+          From a short observation history, a video generative model imagines a visual plan;
+          the Jacobian IDM inverts each step of that plan into a chunk of low-level actions,
+          the robot executes them, and observations return to the video model for the next round.
+        </p>
+      </div>
     </header>
     <figure class="v2-figure is-narrow">
       <img src="./static/figures/fig2_method_overview-1.png" alt="VERA method overview: video world model → Jacobian IDM → robot, in a closed loop">
       <figcaption class="v2-figure-caption is-block">
-        <strong>Translating video to actions.</strong>
+        <span class="fig-no">Fig. 2</span><strong>Translating video to actions.</strong>
         <span class="fig-mark">a,</span> Given context frames, our video world model rolls out a short visual plan.
         <span class="fig-mark">b,</span> The Jacobian IDM inverts each step of this path into a chunk of low-level actions.
         <span class="fig-mark">c,</span> The chunk is executed and observations return to the video model for closed-loop execution.
@@ -151,84 +166,86 @@
 <section class="v2-section is-tint" id="results">
   <div class="v2-section-inner">
     <header class="v2-section-head">
-      <span class="v2-eyebrow">Real-world Panda · Zero-shot</span>
-      <h2 class="v2-title">A single video planner, six prompts, one arm.</h2>
+      <div class="v2-eyebrow"><b>04</b>Real-world Panda · Zero-shot</div>
+      <div class="v2-head-main">
+        <h2 class="v2-title">Six manipulation tasks, specified only by language.</h2>
+      </div>
     </header>
 
     <div class="v2-tabs" role="tablist">
-      <button class="v2-tab is-active" data-target="t-yellow-lego">Yellow cube → lego</button>
-      <button class="v2-tab" data-target="t-blue-button">Push blue button</button>
-      <button class="v2-tab" data-target="t-orange-button">Push orange button</button>
-      <button class="v2-tab" data-target="t-tennis-ball">Tennis ball → bowl</button>
-      <button class="v2-tab" data-target="t-yellow-plate">Yellow cube → plate</button>
-      <button class="v2-tab" data-target="t-purple-cube">Purple cube ↩ off plate</button>
+      <button role="tab" aria-selected="true" aria-controls="t-yellow-lego" class="v2-tab is-active" data-target="t-yellow-lego">Yellow cube → lego</button>
+      <button role="tab" aria-selected="false" aria-controls="t-blue-button" class="v2-tab" data-target="t-blue-button">Push blue button</button>
+      <button role="tab" aria-selected="false" aria-controls="t-orange-button" class="v2-tab" data-target="t-orange-button">Push orange button</button>
+      <button role="tab" aria-selected="false" aria-controls="t-tennis-ball" class="v2-tab" data-target="t-tennis-ball">Tennis ball → bowl</button>
+      <button role="tab" aria-selected="false" aria-controls="t-yellow-plate" class="v2-tab" data-target="t-yellow-plate">Yellow cube → plate</button>
+      <button role="tab" aria-selected="false" aria-controls="t-purple-cube" class="v2-tab" data-target="t-purple-cube">Purple cube ↩ off plate</button>
     </div>
 
     <!-- Panel 1: yellow-cube-on-lego (3 views + dream concat + jacobian) -->
-    <div class="v2-panel is-narrow is-active" id="t-yellow-lego">
+    <div class="v2-panel is-narrow is-active" id="t-yellow-lego" role="tabpanel">
       <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;place the yellow cube on top of the lego block.&rdquo;</span></p>
       <div class="v2-grid cols-3">
-        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/hand_16779706_8s.jpg"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/hand_16779706_8s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">wrist</figcaption></figure>
-        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/varied_1_35317039_8s.jpg"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/varied_1_35317039_8s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 1</figcaption></figure>
-        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/varied_2_39509833_8s.jpg"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/varied_2_39509833_8s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 2</figcaption></figure>
+        <figure class="v2-card"><video style="aspect-ratio: 1280/720" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/hand_16779706_8s.jpg"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/hand_16779706_8s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>a</b>wrist</figcaption></figure>
+        <figure class="v2-card"><video style="aspect-ratio: 1280/720" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/varied_1_35317039_8s.jpg"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/varied_1_35317039_8s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>b</b>external 1</figcaption></figure>
+        <figure class="v2-card"><video style="aspect-ratio: 1280/720" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/varied_2_39509833_8s.jpg"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/varied_2_39509833_8s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>c</b>external 2</figcaption></figure>
       </div>
       <div class="v2-grid cols-1">
-        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/rgb_dream_concat_8s.jpg?v=2"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/rgb_dream_concat_8s.mp4?v=5" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Left three: real-world execution &nbsp;·&nbsp; Right three: dream rollouts</figcaption></figure>
+        <figure class="v2-card is-pano"><video style="aspect-ratio: 1152/128" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/rgb_dream_concat_8s.jpg?v=2"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/rgb_dream_concat_8s.mp4?v=5" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Left three: real-world execution &nbsp;·&nbsp; Right three: dream rollouts</figcaption></figure>
       </div>
       <div class="v2-grid cols-1">
-        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/jacobian_8s.jpg"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/jacobian_8s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
+        <figure class="v2-card is-pano"><video style="aspect-ratio: 1152/256" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-yellow-cube-on-top-of-lego-block/jacobian_8s.jpg"><source data-src="./static/videos/results/ours-yellow-cube-on-top-of-lego-block/jacobian_8s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
       </div>
     </div>
 
-    <!-- Panel 2: blue button (3 views + panoramic Jacobian) -->
-    <div class="v2-panel is-narrow" id="t-blue-button">
+    <!-- Panel 2: blue button (2 views + panoramic Jacobian) -->
+    <div class="v2-panel is-narrow" id="t-blue-button" role="tabpanel">
       <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;approach and push the blue button.&rdquo;</span></p>
       <div class="v2-grid cols-2">
-        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-blue-button/hand_16779706.jpg"><source data-src="./static/videos/results_h264/ours-blue-button/hand_16779706.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">wrist</figcaption></figure>
-        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-blue-button/varied_1_35317039.jpg"><source data-src="./static/videos/results_h264/ours-blue-button/varied_1_35317039.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 1</figcaption></figure>
+        <figure class="v2-card"><video style="aspect-ratio: 1280/720" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-blue-button/hand_16779706.jpg"><source data-src="./static/videos/results_h264/ours-blue-button/hand_16779706.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>a</b>wrist</figcaption></figure>
+        <figure class="v2-card"><video style="aspect-ratio: 1280/720" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-blue-button/varied_1_35317039.jpg"><source data-src="./static/videos/results_h264/ours-blue-button/varied_1_35317039.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>b</b>external 1</figcaption></figure>
       </div>
       <div class="v2-grid cols-1">
-        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-blue-button/policy_vis.jpg"><source data-src="./static/videos/results_h264/ours-blue-button/policy_vis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
+        <figure class="v2-card is-pano"><video style="aspect-ratio: 2304/258" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-blue-button/policy_vis.jpg"><source data-src="./static/videos/results_h264/ours-blue-button/policy_vis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
       </div>
     </div>
 
-    <!-- Panel 3: orange button (3 views + panoramic Jacobian) -->
-    <div class="v2-panel is-narrow" id="t-orange-button">
+    <!-- Panel 3: orange button (2 views + panoramic Jacobian) -->
+    <div class="v2-panel is-narrow" id="t-orange-button" role="tabpanel">
       <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;approach and push the orange button.&rdquo;</span></p>
       <div class="v2-grid cols-2">
-        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-orange-button/hand_16779706.jpg"><source data-src="./static/videos/results_h264/ours-orange-button/hand_16779706.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">wrist</figcaption></figure>
-        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-orange-button/varied_2_39509833.jpg"><source data-src="./static/videos/results_h264/ours-orange-button/varied_2_39509833.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 1</figcaption></figure>
+        <figure class="v2-card"><video style="aspect-ratio: 1280/720" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-orange-button/hand_16779706.jpg"><source data-src="./static/videos/results_h264/ours-orange-button/hand_16779706.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>a</b>wrist</figcaption></figure>
+        <figure class="v2-card"><video style="aspect-ratio: 1280/720" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-orange-button/varied_2_39509833.jpg"><source data-src="./static/videos/results_h264/ours-orange-button/varied_2_39509833.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>b</b>external 2</figcaption></figure>
       </div>
       <div class="v2-grid cols-1">
-        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-orange-button/policy_vis.jpg"><source data-src="./static/videos/results_h264/ours-orange-button/policy_vis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
+        <figure class="v2-card is-pano"><video style="aspect-ratio: 2304/258" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-orange-button/policy_vis.jpg"><source data-src="./static/videos/results_h264/ours-orange-button/policy_vis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
       </div>
     </div>
 
     <!-- Panel 4: tennis ball -->
-    <div class="v2-panel is-narrow" id="t-tennis-ball">
+    <div class="v2-panel is-narrow" id="t-tennis-ball" role="tabpanel">
       <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;pick up the green tennis ball and place it inside the bowl.&rdquo;</span></p>
       <div class="v2-grid cols-2">
-        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-tennis-ball/fixed_hand_16779706.jpg"><source data-src="./static/videos/results_h264/ours-tennis-ball/fixed_hand_16779706.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">wrist</figcaption></figure>
-        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-tennis-ball/fixed_varied_2_39509833.jpg"><source data-src="./static/videos/results_h264/ours-tennis-ball/fixed_varied_2_39509833.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 1</figcaption></figure>
+        <figure class="v2-card"><video style="aspect-ratio: 1280/720" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-tennis-ball/fixed_hand_16779706.jpg"><source data-src="./static/videos/results_h264/ours-tennis-ball/fixed_hand_16779706.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>a</b>wrist</figcaption></figure>
+        <figure class="v2-card"><video style="aspect-ratio: 1280/720" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-tennis-ball/fixed_varied_2_39509833.jpg"><source data-src="./static/videos/results_h264/ours-tennis-ball/fixed_varied_2_39509833.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>b</b>external 1</figcaption></figure>
       </div>
       <div class="v2-grid cols-1">
-        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-tennis-ball/fixed_policy_vis.jpg"><source data-src="./static/videos/results_h264/ours-tennis-ball/fixed_policy_vis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
+        <figure class="v2-card is-pano"><video style="aspect-ratio: 2304/258" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-tennis-ball/fixed_policy_vis.jpg"><source data-src="./static/videos/results_h264/ours-tennis-ball/fixed_policy_vis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
       </div>
     </div>
 
     <!-- Panel 5: yellow on plate -->
-    <div class="v2-panel is-narrow" id="t-yellow-plate">
+    <div class="v2-panel is-narrow" id="t-yellow-plate" role="tabpanel">
       <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;place the yellow cube on top of the plate.&rdquo;</span></p>
       <div class="v2-grid cols-1">
-        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-place-yellow-cube-on-top-of-the-plate/policy_vis.jpg"><source data-src="./static/videos/results/ours-place-yellow-cube-on-top-of-the-plate/policy_vis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
+        <figure class="v2-card is-pano"><video style="aspect-ratio: 2304/258" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-place-yellow-cube-on-top-of-the-plate/policy_vis.jpg"><source data-src="./static/videos/results/ours-place-yellow-cube-on-top-of-the-plate/policy_vis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
       </div>
     </div>
 
     <!-- Panel 6: purple cube -->
-    <div class="v2-panel is-narrow" id="t-purple-cube">
+    <div class="v2-panel is-narrow" id="t-purple-cube" role="tabpanel">
       <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;take the purple cube out of the plate and place it on the side.&rdquo;</span></p>
       <div class="v2-grid cols-1">
-        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-take-purple-cube-out-of-plate-and-place-on-side/policy_vis_recovered.jpg"><source data-src="./static/videos/results_h264/ours-take-purple-cube-out-of-plate-and-place-on-side/policy_vis_recovered.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
+        <figure class="v2-card is-pano"><video style="aspect-ratio: 2304/258" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results_h264/ours-take-purple-cube-out-of-plate-and-place-on-side/policy_vis_recovered.jpg"><source data-src="./static/videos/results_h264/ours-take-purple-cube-out-of-plate-and-place-on-side/policy_vis_recovered.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
       </div>
     </div>
   </div>
@@ -240,18 +257,20 @@
 <section class="v2-section" id="hidden">
   <div class="v2-section-inner">
     <header class="v2-section-head">
-      <span class="v2-eyebrow">Reasoning · Occlusion</span>
-      <h2 class="v2-title">The target hides behind a wall — visible from only one of three cameras.</h2>
-      <p class="v2-intro">
-        We start with <strong>occlusion-based reasoning</strong>: the target hides behind a wall,
-        visible from only one of three cameras, with a distractor (orange button) probing whether
-        the planner truly grounds the language prompt.
-      </p>
+      <div class="v2-eyebrow"><b>05</b>Reasoning · Occlusion</div>
+      <div class="v2-head-main">
+        <h2 class="v2-title">The target hides behind a wall — visible from only one of three cameras.</h2>
+        <p class="v2-intro">
+          We start with <strong>occlusion-based reasoning</strong>: the target hides behind a wall,
+          visible from only one of three cameras, with a distractor (orange button) probing whether
+          the planner truly grounds the language prompt.
+        </p>
+      </div>
     </header>
 
-    <figure class="v2-figure" style="max-width:55%; margin:0 auto 32px;">
+    <figure class="v2-figure is-half">
       <img src="./static/figures/hidden_button_setting.png" alt="Press Hidden Button task setup: target visible from only one camera, with distractor props">
-      <figcaption class="v2-figure-caption">Task setup &middot; the blue target is visible from only one of three viewpoints; an orange distractor probes whether the planner truly grounds the language prompt.</figcaption>
+      <figcaption class="v2-figure-caption"><span class="fig-no">Fig. 3</span>The blue target is visible from only one of three viewpoints; an orange distractor probes whether the planner truly grounds the language prompt.</figcaption>
     </figure>
 
     <div class="v2-compare-prompt">
@@ -265,12 +284,12 @@
           <span class="v2-badge ok">✓ Succeeds</span>
         </header>
         <div class="v2-grid cols-3">
-          <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-find-hidden-blue-button/hand_16779706.jpg"><source data-src="./static/videos/results/ours-find-hidden-blue-button/hand_16779706.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">wrist</figcaption></figure>
-          <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-find-hidden-blue-button/varied_1_35317039.jpg"><source data-src="./static/videos/results/ours-find-hidden-blue-button/varied_1_35317039.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 1</figcaption></figure>
-          <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-find-hidden-blue-button/varied_2_39509833.jpg"><source data-src="./static/videos/results/ours-find-hidden-blue-button/varied_2_39509833.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 2</figcaption></figure>
+          <figure class="v2-card"><video style="aspect-ratio: 1280/720" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-find-hidden-blue-button/hand_16779706.jpg"><source data-src="./static/videos/results/ours-find-hidden-blue-button/hand_16779706.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>a</b>wrist</figcaption></figure>
+          <figure class="v2-card"><video style="aspect-ratio: 1280/720" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-find-hidden-blue-button/varied_1_35317039.jpg"><source data-src="./static/videos/results/ours-find-hidden-blue-button/varied_1_35317039.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>b</b>external 1</figcaption></figure>
+          <figure class="v2-card"><video style="aspect-ratio: 1280/720" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-find-hidden-blue-button/varied_2_39509833.jpg"><source data-src="./static/videos/results/ours-find-hidden-blue-button/varied_2_39509833.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>c</b>external 2</figcaption></figure>
         </div>
         <div class="v2-grid cols-1" style="margin-top:14px;">
-          <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-find-hidden-blue-button/policy_vis.jpg"><source data-src="./static/videos/results/ours-find-hidden-blue-button/policy_vis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
+          <figure class="v2-card is-pano"><video style="aspect-ratio: 2304/258" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-find-hidden-blue-button/policy_vis.jpg"><source data-src="./static/videos/results/ours-find-hidden-blue-button/policy_vis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian predictions</figcaption></figure>
         </div>
         <p class="v2-outcome">
           The <strong>video planner imagines a path around the wall</strong>; the Jacobian IDM
@@ -286,8 +305,8 @@
           <span class="v2-badge fail">✗ Fails</span>
         </header>
         <div class="v2-grid cols-2">
-          <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/19-dwtdoq2i5n5pm1dSMoX5x48MjnImR9.jpg"><source data-src="./static/videos/19-dwtdoq2i5n5pm1dSMoX5x48MjnImR9.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 1</figcaption></figure>
-          <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/1LfKw25SNV40YexxLNCCD4OSEY3sVDVcT.jpg"><source data-src="./static/videos/1LfKw25SNV40YexxLNCCD4OSEY3sVDVcT.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">external 2</figcaption></figure>
+          <figure class="v2-card"><video style="aspect-ratio: 1280/720" autoplay loop muted playsinline preload="none" data-poster="./static/posters/19-dwtdoq2i5n5pm1dSMoX5x48MjnImR9.jpg"><source data-src="./static/videos/19-dwtdoq2i5n5pm1dSMoX5x48MjnImR9.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>a</b>external 1</figcaption></figure>
+          <figure class="v2-card"><video style="aspect-ratio: 1280/720" autoplay loop muted playsinline preload="none" data-poster="./static/posters/1LfKw25SNV40YexxLNCCD4OSEY3sVDVcT.jpg"><source data-src="./static/videos/1LfKw25SNV40YexxLNCCD4OSEY3sVDVcT.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>b</b>external 2</figcaption></figure>
         </div>
         <p class="v2-outcome">
           The <strong>dreamed future itself stops short of locating the hidden button</strong> —
@@ -306,36 +325,38 @@
 <section class="v2-section is-tint" id="control">
   <div class="v2-section-inner">
     <header class="v2-section-head">
-      <span class="v2-eyebrow">Prompt control</span>
-      <h2 class="v2-title">Same scene. Three different goals.</h2>
-      <p class="v2-caption">
-        From the same initial observation, three language prompts steer the video planner to three
-        different objects on the table. Prompt grounding is inherited intact from the video model.
-      </p>
+      <div class="v2-eyebrow"><b>06</b>Prompt control</div>
+      <div class="v2-head-main">
+        <h2 class="v2-title">Same scene. Three different goals.</h2>
+        <p class="v2-caption">
+          From the same initial observation, three language prompts steer the video planner to three
+          different objects on the table. Prompt grounding is inherited intact from the video model.
+        </p>
+      </div>
     </header>
 
     <div class="v2-tabs" role="tablist">
-      <button class="v2-tab is-active" data-target="p-cup">Approach the cup</button>
-      <button class="v2-tab" data-target="p-lego">Approach the lego</button>
-      <button class="v2-tab" data-target="p-ball">Approach the tennis ball</button>
+      <button role="tab" aria-selected="true" aria-controls="p-cup" class="v2-tab is-active" data-target="p-cup">Approach the cup</button>
+      <button role="tab" aria-selected="false" aria-controls="p-lego" class="v2-tab" data-target="p-lego">Approach the lego</button>
+      <button role="tab" aria-selected="false" aria-controls="p-ball" class="v2-tab" data-target="p-ball">Approach the tennis ball</button>
     </div>
 
-    <div class="v2-panel is-active" id="p-cup">
+    <div class="v2-panel is-active" id="p-cup" role="tabpanel">
       <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;approach the cup.&rdquo;</span></p>
       <div class="v2-grid cols-1">
-        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-video-model-controllability/full_train_cup.jpg"><source data-src="./static/videos/results/ours-video-model-controllability/full_train_cup.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button></figure>
+        <figure class="v2-card is-pano"><video style="aspect-ratio: 576/128" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-video-model-controllability/full_train_cup.jpg"><source data-src="./static/videos/results/ours-video-model-controllability/full_train_cup.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button></figure>
       </div>
     </div>
-    <div class="v2-panel" id="p-lego">
+    <div class="v2-panel" id="p-lego" role="tabpanel">
       <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;approach the lego block.&rdquo;</span></p>
       <div class="v2-grid cols-1">
-        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-video-model-controllability/full_train_lego.jpg"><source data-src="./static/videos/results/ours-video-model-controllability/full_train_lego.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button></figure>
+        <figure class="v2-card is-pano"><video style="aspect-ratio: 576/128" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-video-model-controllability/full_train_lego.jpg"><source data-src="./static/videos/results/ours-video-model-controllability/full_train_lego.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button></figure>
       </div>
     </div>
-    <div class="v2-panel" id="p-ball">
+    <div class="v2-panel" id="p-ball" role="tabpanel">
       <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;approach the tennis ball.&rdquo;</span></p>
       <div class="v2-grid cols-1">
-        <figure class="v2-card is-pano"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-video-model-controllability/full_train_tennis.jpg"><source data-src="./static/videos/results/ours-video-model-controllability/full_train_tennis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button></figure>
+        <figure class="v2-card is-pano"><video style="aspect-ratio: 576/128" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-video-model-controllability/full_train_tennis.jpg"><source data-src="./static/videos/results/ours-video-model-controllability/full_train_tennis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button></figure>
       </div>
     </div>
   </div>
@@ -347,34 +368,36 @@
 <section class="v2-section" id="allegro-sim">
   <div class="v2-section-inner">
     <header class="v2-section-head">
-      <span class="v2-eyebrow">Allegro Hand · Simulation · 16-DoF</span>
-      <h2 class="v2-title">Dexterous in-hand cube reorientation.</h2>
-      <p class="v2-caption">
-        We evaluate our method on dexterous multi-fingered reorientation tasks with 16 DoFs,
-        specifying the goal only by language prompt. The video model is trained on cube-reorientation
-        demonstrations paired with three language prompts — <em>clockwise</em>, <em>counter-clockwise</em>,
-        and <em>random</em>. At inference time, the language prompt steers the hand to produce the
-        intended rotation: opposite prompts yield opposite cube movements from the same initial state.
-      </p>
+      <div class="v2-eyebrow"><b>07</b>Allegro Hand · Simulation · 16-DoF</div>
+      <div class="v2-head-main">
+        <h2 class="v2-title">Dexterous in-hand cube reorientation.</h2>
+        <p class="v2-caption">
+          We evaluate our method on dexterous multi-fingered reorientation tasks with 16 DoFs,
+          specifying the goal only by language prompt. The video model is trained on cube-reorientation
+          demonstrations paired with three language prompts — <em>clockwise</em>, <em>counter-clockwise</em>,
+          and <em>random</em>. At inference time, the language prompt steers the hand to produce the
+          intended rotation: opposite prompts yield opposite cube movements from the same initial state.
+        </p>
+      </div>
     </header>
 
     <div class="v2-tabs" role="tablist">
-      <button class="v2-tab is-active" data-target="a-cw">Clockwise</button>
-      <button class="v2-tab" data-target="a-ccw">Counter-clockwise</button>
+      <button role="tab" aria-selected="true" aria-controls="a-cw" class="v2-tab is-active" data-target="a-cw">Clockwise</button>
+      <button role="tab" aria-selected="false" aria-controls="a-ccw" class="v2-tab" data-target="a-ccw">Counter-clockwise</button>
     </div>
 
-    <div class="v2-panel is-active" id="a-cw">
+    <div class="v2-panel is-active" id="a-cw" role="tabpanel">
       <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;rotate the cube clockwise around the vertical axis.&rdquo;</span></p>
       <div class="v2-grid cols-2">
-        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/allegro-sim-clockwise/1.jpg?v=2"><source data-src="./static/videos/results/allegro-sim-clockwise/1.mp4?v=2" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Rollout</figcaption></figure>
-        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/allegro-sim-clockwise/2.jpg?v=2"><source data-src="./static/videos/results/allegro-sim-clockwise/2.mp4?v=2" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian</figcaption></figure>
+        <figure class="v2-card"><video style="aspect-ratio: 384/128" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/allegro-sim-clockwise/1.jpg?v=2"><source data-src="./static/videos/results/allegro-sim-clockwise/1.mp4?v=2" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>a</b>Rollout</figcaption></figure>
+        <figure class="v2-card"><video style="aspect-ratio: 1126/252" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/allegro-sim-clockwise/2.jpg?v=2"><source data-src="./static/videos/results/allegro-sim-clockwise/2.mp4?v=2" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>b</b>Jacobian</figcaption></figure>
       </div>
     </div>
-    <div class="v2-panel" id="a-ccw">
+    <div class="v2-panel" id="a-ccw" role="tabpanel">
       <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;rotate the cube counter-clockwise around the vertical axis.&rdquo;</span></p>
       <div class="v2-grid cols-2">
-        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-ccw/ccw.jpg"><source data-src="./static/videos/results/ours-ccw/ccw.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Rollout</figcaption></figure>
-        <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-ccw/ccw_policy_vis.jpg"><source data-src="./static/videos/results/ours-ccw/ccw_policy_vis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian</figcaption></figure>
+        <figure class="v2-card"><video style="aspect-ratio: 384/128" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-ccw/ccw.jpg"><source data-src="./static/videos/results/ours-ccw/ccw.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>a</b>Rollout</figcaption></figure>
+        <figure class="v2-card"><video style="aspect-ratio: 804/180" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/ours-ccw/ccw_policy_vis.jpg"><source data-src="./static/videos/results/ours-ccw/ccw_policy_vis.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>b</b>Jacobian</figcaption></figure>
       </div>
     </div>
   </div>
@@ -386,19 +409,21 @@
 <section class="v2-section is-tint" id="allegro-real">
   <div class="v2-section-inner">
     <header class="v2-section-head">
-      <span class="v2-eyebrow">Allegro Hand · Real world</span>
-      <h2 class="v2-title">Real-world dexterous reorientation.</h2>
-      <p class="v2-caption">
-        The same video planner that drives a 7-DoF arm also commands a real 16-DoF Allegro hand.
-        Pairing one planner with an embodiment-specific Jacobian IDM is enough to translate the
-        dreamed future into coordinated finger motion on hardware.
-      </p>
+      <div class="v2-eyebrow"><b>08</b>Allegro Hand · Real world</div>
+      <div class="v2-head-main">
+        <h2 class="v2-title">Real-world dexterous reorientation.</h2>
+        <p class="v2-caption">
+          The same video planner that drives a 7-DoF arm also commands a real 16-DoF Allegro hand.
+          Pairing one planner with an embodiment-specific Jacobian IDM is enough to translate the
+          dreamed future into coordinated finger motion on hardware.
+        </p>
+      </div>
     </header>
     <p class="v2-prompt"><span class="v2-prompt-tag">Prompt</span><span class="v2-prompt-text">&ldquo;rotate the cube clockwise around the vertical axis.&rdquo;</span></p>
     <div class="v2-grid cols-3">
-      <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/allegro-reorient-clockwise/real-world_6s.jpg"><source data-src="./static/videos/results/allegro-reorient-clockwise/real-world_6s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Real-world</figcaption></figure>
-      <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/allegro-reorient-clockwise/dream_6s.jpg"><source data-src="./static/videos/results/allegro-reorient-clockwise/dream_6s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Dream</figcaption></figure>
-      <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/allegro-reorient-clockwise/jacobian_6s.jpg"><source data-src="./static/videos/results/allegro-reorient-clockwise/jacobian_6s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Jacobian</figcaption></figure>
+      <figure class="v2-card"><video style="aspect-ratio: 512/256" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/allegro-reorient-clockwise/real-world_6s.jpg"><source data-src="./static/videos/results/allegro-reorient-clockwise/real-world_6s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>a</b>Real-world</figcaption></figure>
+      <figure class="v2-card"><video style="aspect-ratio: 512/256" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/allegro-reorient-clockwise/dream_6s.jpg"><source data-src="./static/videos/results/allegro-reorient-clockwise/dream_6s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>b</b>Dream</figcaption></figure>
+      <figure class="v2-card"><video style="aspect-ratio: 1024/512" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/allegro-reorient-clockwise/jacobian_6s.jpg"><source data-src="./static/videos/results/allegro-reorient-clockwise/jacobian_6s.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label"><b>c</b>Jacobian</figcaption></figure>
     </div>
   </div>
 </section>
@@ -409,18 +434,20 @@
 <section class="v2-section" id="pusht">
   <div class="v2-section-inner">
     <header class="v2-section-head">
-      <span class="v2-eyebrow">PushT · Simulation</span>
-      <h2 class="v2-title">Push a T-block to a goal pose.</h2>
-      <p class="v2-caption">
-        A 2-DoF planar-pushing benchmark with contact-rich corner regrasps — a controlled setting
-        where the gap between a faithful Jacobian translator and an unstructured baseline becomes
-        directly measurable in closed-loop success.
-      </p>
+      <div class="v2-eyebrow"><b>09</b>PushT · Simulation</div>
+      <div class="v2-head-main">
+        <h2 class="v2-title">Push a T-block to a goal pose.</h2>
+        <p class="v2-caption">
+          A 2-DoF planar-pushing benchmark with contact-rich corner regrasps — a controlled setting
+          where the gap between a faithful Jacobian translator and an unstructured baseline becomes
+          directly measurable in closed-loop success.
+        </p>
+      </div>
     </header>
     <div class="v2-grid cols-3">
-      <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/pusht-results/pusht_run_1.jpg"><source data-src="./static/videos/results/pusht-results/pusht_run_1.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Run 1</figcaption></figure>
-      <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/pusht-results/pusht_run_2.jpg"><source data-src="./static/videos/results/pusht-results/pusht_run_2.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Run 2</figcaption></figure>
-      <figure class="v2-card"><video autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/pusht-results/pusht_run_3.jpg"><source data-src="./static/videos/results/pusht-results/pusht_run_3.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Run 3</figcaption></figure>
+      <figure class="v2-card"><video style="aspect-ratio: 630/252" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/pusht-results/pusht_run_1.jpg"><source data-src="./static/videos/results/pusht-results/pusht_run_1.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Run 1</figcaption></figure>
+      <figure class="v2-card"><video style="aspect-ratio: 630/252" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/pusht-results/pusht_run_2.jpg"><source data-src="./static/videos/results/pusht-results/pusht_run_2.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Run 2</figcaption></figure>
+      <figure class="v2-card"><video style="aspect-ratio: 630/252" autoplay loop muted playsinline preload="none" data-poster="./static/posters/results/pusht-results/pusht_run_3.jpg"><source data-src="./static/videos/results/pusht-results/pusht_run_3.mp4" type="video/mp4"></video><button class="v2-fs-btn" aria-label="fullscreen"><svg><use href="#i-fs"/></svg></button><figcaption class="v2-card-label">Run 3</figcaption></figure>
     </div>
   </div>
 </section>
@@ -431,32 +458,33 @@
 <section class="v2-section is-tint" id="ablation">
   <div class="v2-section-inner">
     <header class="v2-section-head">
-      <span class="v2-eyebrow">Designing a faithful IDM</span>
-      <h2 class="v2-title">J-IDM scales with action dimensionality.</h2>
-      <p class="v2-caption">
-        A controlled study isolating the design choice. Under matched data and DoF budgets, the
-        Jacobian-parameterized IDM holds a better data–accuracy frontier than unstructured
-        baselines — and the gap widens as embodiment dimensionality grows.
-      </p>
+      <div class="v2-eyebrow"><b>10</b>Designing a faithful IDM</div>
+      <div class="v2-head-main">
+        <h2 class="v2-title">J-IDM scales with action dimensionality.</h2>
+        <p class="v2-caption">
+          A controlled study isolating the design choice. Under matched data and DoF budgets, the
+          Jacobian-parameterized IDM holds a better data–accuracy frontier than unstructured
+          baselines — and the gap widens as embodiment dimensionality grows.
+        </p>
+      </div>
     </header>
     <figure class="v2-figure">
       <img src="./static/figures/fig4_idm_dof_study.png" alt="J-IDM scales more favorably with action dimensionality">
+      <figcaption class="v2-figure-caption"><span class="fig-no">Fig. 4</span>The Jacobian-parameterized IDM holds a better data–accuracy frontier as embodiment dimensionality grows.</figcaption>
     </figure>
   </div>
 </section>
 
 <!-- ============================================
-     FOOTER
+     FOOTER — colophon
      ============================================ -->
 <footer class="v2-footer">
-  <p class="v2-footer-tagline">
-    The path from a better video model to a better robot runs through the inverse dynamics model.
-  </p>
-  <p>&copy; 2026 Anonymous Authors</p>
+  <div class="v2-footer-rule"></div>
+  <p class="colophon">&copy; 2026 Anonymous Authors</p>
 </footer>
 
 <!-- ============================================
-     JS — tab switcher + lazy-load + fullscreen
+     JS — tab switcher + lazy-load + fullscreen + scrollspy
      ============================================ -->
 <script>
 (function() {
@@ -476,14 +504,27 @@
         if (src && src.dataset.src) {
           src.src = src.dataset.src;
           if (v.dataset.poster) v.poster = v.dataset.poster;
+          v.preload = 'metadata';
           v.load();
-          v.play().catch(function(){});
+          var p = v.play();
+          if (p && p.catch) p.catch(function(){ v.classList.add('is-live'); });
+          setTimeout(function(){ v.classList.add('is-live'); }, 2500);
         }
         io.unobserve(v);
       });
     }, {rootMargin: '200px'});
     lazies.forEach(function(v) { io.observe(v); });
   }
+
+  // Fade each video in once a frame (or its poster) is ready — never leave one hidden
+  document.querySelectorAll('video').forEach(function(v) {
+    var live = function() { v.classList.add('is-live'); };
+    v.addEventListener('playing', live);
+    v.addEventListener('loadeddata', live);
+    v.addEventListener('loadedmetadata', live);
+    v.addEventListener('error', live, true); /* source errors don't bubble */
+    if (v.readyState >= 1) live();
+  });
 
   // Tab switcher: data-target → panel id
   document.querySelectorAll('.v2-tabs').forEach(function(tabs) {
@@ -492,7 +533,10 @@
       var btn = e.target.closest('.v2-tab');
       if (!btn) return;
       var target = btn.dataset.target;
-      tabs.querySelectorAll('.v2-tab').forEach(function(b) { b.classList.toggle('is-active', b === btn); });
+      tabs.querySelectorAll('.v2-tab').forEach(function(b) {
+        b.classList.toggle('is-active', b === btn);
+        b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
+      });
       section.querySelectorAll('.v2-panel').forEach(function(p) {
         p.classList.toggle('is-active', p.id === target);
       });
@@ -507,6 +551,10 @@
     if (document.fullscreenElement) document.exitFullscreen();
     else if (v.requestFullscreen) v.requestFullscreen();
     else if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
+    else if (v.webkitEnterFullscreen) {
+      /* iPhone Safari: video-only native fullscreen */
+      try { v.webkitEnterFullscreen(); } catch (e) {}
+    }
   }
   document.addEventListener('click', function(e) {
     var btn = e.target.closest('.v2-fs-btn');
@@ -519,6 +567,43 @@
     var v = e.target.closest('video');
     if (v) toFs(v);
   });
+
+  // Scrollspy: highlight the nav link of the section in view
+  var navLinks = document.querySelectorAll('.v2-nav-links a[href^="#"]');
+  var linkFor = {};
+  navLinks.forEach(function(a) {
+    var el = document.getElementById(a.getAttribute('href').slice(1));
+    if (el) linkFor[el.id] = a;
+  });
+  var ids = Object.keys(linkFor);
+  if (ids.length) {
+    var spy = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (!e.isIntersecting) return;
+        navLinks.forEach(function(a) { a.classList.remove('is-current'); });
+        linkFor[e.target.id].classList.add('is-current');
+      });
+    }, {rootMargin: '-40% 0px -55% 0px'});
+    ids.forEach(function(id) { spy.observe(document.getElementById(id)); });
+  }
+
+  // Reading-progress hairline under the nav
+  var bar = document.querySelector('.v2-nav-progress');
+  if (bar) {
+    var ticking = false;
+    var update = function() {
+      var h = document.documentElement;
+      var denom = h.scrollHeight - h.clientHeight;
+      bar.style.width = (denom > 0 ? (h.scrollTop / denom) * 100 : 0) + '%';
+      ticking = false;
+    };
+    var onTick = function() {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    };
+    window.addEventListener('scroll', onTick, {passive: true});
+    window.addEventListener('resize', onTick);
+    update();
+  }
 })();
 </script>
 
